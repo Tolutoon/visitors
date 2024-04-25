@@ -85,13 +85,13 @@ const Visitors = () => {
             key={request.id}
           >
             <div className="col-span-1 text-center font-bold">{request.visitorname}</div>
-            <div className="col-span-1 text-center">{request.visitorphone}</div>
+            <div className="col-span-1 text-center">Visitor</div>
             <div className="col-span-1 text-center">{request.plannedvisittime}</div>
-            <div className="col-span-1 text-center">{findEmployeeName(request.staffid)}</div>
-            <div className="col-span-1 text-center">{request.staffid}</div>
+            <div className="col-span-1 text-center font-bold">{findEmployeeName(request.staffid)}</div>
+            <div className="col-span-1 text-center">Official</div>
             <div className="col-span-1 text-center">{request.status}</div>
             <div className="col-span-1 text-center" style={{color: request.hostDecision ? 'green' : 'red'}}>
-              {request.hostDecision ? 'Accepted' : 'Rejected'}
+              {request.hostDecision ? 'Accepted' : 'Declined'}
             </div>
             <button onClick={() => handleCheckIn(request.id)}>
               {request.hostDecision ? 'Check out' : 'Check in'}
