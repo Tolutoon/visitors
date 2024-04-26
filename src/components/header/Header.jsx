@@ -29,11 +29,12 @@ const Header = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const currentDate = new Date();
     // Format the data to match the model
     const formattedData = {
       ...formData,
-      plannedvisitdate: "2024-04-24", // Example date
-      plannedvisittime: "16:20" // Example time
+      plannedvisitdate: currentDate.toISOString().slice(0, 10),
+      plannedvisittime: `${currentDate.getHours()}:${currentDate.getMinutes()}`
     };
   
     // Send form data to the server using Axios post request
