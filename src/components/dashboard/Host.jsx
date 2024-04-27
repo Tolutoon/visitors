@@ -4,6 +4,43 @@ import axios from "axios";
 const Hosts = () => {
   const [visitationRequests, setVisitationRequests] = useState([]);
   const [employees, setEmployees] = useState([]);
+  const requestBody = {
+    "createdat": "now()",
+    "id": 0,
+    "visitorname": "Yimika",
+    "visitorphone": "string",
+    "visitoremail": "string",
+    "plannedvisitdate": "2024-04-27",
+    "plannedvisittime": "5:10",
+    "hostname": "string",
+    "staffid": "1234",
+    "hostphoneno": "string",
+    "hostemailaddress": "string",
+    "hostofficeextensiom": "string",
+    "status": "Awaiting",
+    "statusdate": "now()",
+    "statusbystaffid": "string"
+  };
+  
+  function submit(requestBody) {
+    axios.patch('http://ezapi.issl.ng:3333/visitationrequest', requestBody, {
+      headers: {
+        'accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(response => {
+      console.log('Patch request successful:', response.data);
+    })
+    .catch(error => {
+      console.error('Error making patch request:', error);
+    });
+  }
+  
+
+  
+
+  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -25,26 +62,31 @@ const Hosts = () => {
     fetchData();
   }, []);
 
-  const handleCheckIn = async (id) => {
-    try {
-      const updatedRequests = visitationRequests.map((request) => {
-        if (request.id === id) {
-          return { ...request, hostDecision: !request.hostDecision };
-        }
-        return request;
-      });
-      setVisitationRequests(updatedRequests);
+// const handleCheckIn = async (id) => {
+//   try {
+//     // Find the request object to get the updated hostDecision value
+//     const updatedRequestIndex = visitationRequests.findIndex((req) => req.id === id);
+//     if (updatedRequestIndex === -1) {
+//       console.error("Request with the specified ID not found.");
+//       return;
+//     }
+//     const updatedRequests = [...visitationRequests];
+//     updatedRequests[updatedRequestIndex] = { ...updatedRequests[updatedRequestIndex], hostDecision: !updatedRequests[updatedRequestIndex].hostDecision, status: "Signed In" };
 
-      const updatedHostDecision = !updatedRequests.find((req) => req.id === id).status;
-      console.log("Updated host decision:", updatedHostDecision);
+//     // Update state
+//     setVisitationRequests(updatedRequests);
 
-      await axios.put(`http://ezapi.issl.ng:3333/visitationrequest/${id}`, {
-        hostDecision: updatedHostDecision
-      });
-    } catch (error) {
-      console.error("Error updating visitation request:", error);
-    }
-  };
+//     // Send PATCH request with the updated data in the request body
+//     await axios.patch(`http://ezapi.issl.ng:3333/visitationrequest/${id}`, {
+//       hostDecision: updatedRequests[updatedRequestIndex].hostDecision,
+//       status: "Signed In"
+//     });
+//   } catch (error) {
+//     console.error("Error updating visitation request:", error);
+//   }
+// };
+
+  
 
   // Function to find employee name by staffid
   const findEmployeeName = (staffid) => {
@@ -61,9 +103,7 @@ const Hosts = () => {
         <div className="col-span-1 text-center">Visitor's name</div>
         <div className="col-span-1 text-center">Visitor's Type</div>
         <div className="col-span-1 text-center">Arrival Time</div>
-
         <div className="col-span-1 text-center">Purpose</div>
-      
         <div className="col-span-1 text-center">Visitor's status</div>
       </div>
 
@@ -80,7 +120,7 @@ const Hosts = () => {
             <div className="col-span-1 text-center" style={{color: request.hostDecision ? 'green' : 'red'}}>
               {request.hostDecision ? 'Accepted' : 'Declined'}
             </div>
-            <button onClick={() => handleCheckIn(request.id)}>
+            <button onClick={() => submit(requestBody)}>
               {request.hostDecision ? 'Check out' : 'Check in'}
             </button>
           </div>

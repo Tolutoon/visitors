@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-const Hosts = () => {
+const Visitors = () => {
   const [visitationRequests, setVisitationRequests] = useState([]);
   const [employees, setEmployees] = useState([]);
 
@@ -24,7 +24,6 @@ const Hosts = () => {
 
     fetchData();
   }, []);
-
   const handleCheckIn = async (id) => {
     try {
       const updatedRequests = visitationRequests.map((request) => {
@@ -34,17 +33,19 @@ const Hosts = () => {
         return request;
       });
       setVisitationRequests(updatedRequests);
-
+  
       const updatedHostDecision = !visitationRequests.find((req) => req.id === id).hostDecision;
       console.log("Updated host decision:", updatedHostDecision);
-
-      await axios.put(`http://ezapi.issl.ng:3333/visitationrequest/${id}`, {
+  
+      // Send PATCH request to update the hostDecision field
+      await axios.patch(`http://ezapi.issl.ng:3333/visitationrequest/${id}`, {
         hostDecision: updatedHostDecision
       });
     } catch (error) {
       console.error("Error updating visitation request:", error);
     }
   };
+  
 
   // Function to find employee name by staffid
   const findEmployeeName = (staffid) => {
@@ -89,4 +90,4 @@ const Hosts = () => {
   );
 };
 
-export default Hosts;
+export default Visitors;
