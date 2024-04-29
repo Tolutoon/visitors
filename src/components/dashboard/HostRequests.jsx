@@ -28,10 +28,10 @@ const FilteredCard = ({ hostId }) => {
     fetchData();
   }, []);
 
-  // Filter visitation requests based on staff ID
-  const filteredRequests = visitationRequests.filter((request) => request.staffid === hostId);
+  // Filter visitation requests based on staff ID and status not equal to "Approved"
+  const filteredRequests = visitationRequests.filter((request) => request.staffid === hostId && request.status !== "Approved");
 
-  // If there are no requests matching the ID, return null
+  // If there are no requests matching the ID or all are approved, return null
   if (filteredRequests.length === 0) {
     return null;
   }
