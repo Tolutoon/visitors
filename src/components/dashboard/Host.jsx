@@ -20,7 +20,7 @@ const Hosts = ({hostId}) => {
     "hostphoneno": "string",
     "hostemailaddress": "string",
     "hostofficeextensiom": "string",
-    "status": "Awaiting",
+    "status": "Checked In",
     "statusdate": "now()",
     "statusbystaffid": "string"
   };
