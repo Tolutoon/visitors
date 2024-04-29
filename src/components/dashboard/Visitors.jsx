@@ -80,9 +80,10 @@ const Visitors = () => {
             <div className="col-span-1 text-center font-bold">{findEmployeeName(request.staffid)}</div>
             <div className="col-span-1 text-center">Official</div>
             <div className="col-span-1 text-center">{request.status}</div>
-            <div className="col-span-1 text-center" style={{color: request.hostDecision ? 'green' : 'red'}}>
+            {/* <div className="col-span-1 text-center" style={{color: request.hostDecision ? 'green' : 'red'}}>
               {request.hostDecision ? 'Accepted' : 'Declined'}
-            </div>
+            </div> */}
+             <div className="col-span-1 text-center">{request.statusbystaffid}</div>
             <button 
 onClick={() => handleCheckIn(request.id)}
   style={{

@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const HostRequests = () => {
   return (
     <div className='py-8'>
-      <FilteredCard hostId={'1234'}/>
+      <FilteredCard hostId={'1234'} />
+      <ToastContainer />
     </div>
   );
 };
 
-const FilteredCard = ({hostId}) => {
+const FilteredCard = ({ hostId }) => {
   const [visitationRequests, setVisitationRequests] = useState([]);
 
   useEffect(() => {
@@ -37,13 +40,28 @@ const FilteredCard = ({hostId}) => {
   return (
     <div>
       {filteredRequests.map((request) => (
-        <Card key={request.id} request={request} />
+        <Card key={request.id} request={request} setVisitationRequests={setVisitationRequests} />
       ))}
     </div>
   );
 };
 
-const Card = ({ request }) => {
+const Card = ({ request, setVisitationRequests }) => {
+  const handleApprove = async () => {
+    try {
+      // Send PATCH request to update the request status to "Approved"
+      await axios.patch(`http://ezapi.issl.ng:3333/visitationrequest?id=eq.${request.id}`, {
+        status: "Approved"
+      });
+      toast.success('Request approved successfully'); // Show toaster notification
+
+      // Update the state to remove the approved request from the UI
+      setVisitationRequests(prevRequests => prevRequests.filter(req => req.id !== request.id));
+    } catch (error) {
+      console.error("Error approving request:", error);
+    }
+  };
+
   return (
     <div className="max-w-sm mx-auto bg-white rounded-xl shadow-md overflow-hidden mb-4">
       <div className="p-12">
@@ -73,7 +91,7 @@ const Card = ({ request }) => {
           </div>
         </div>
         <div className="flex justify-center">
-          <button className="bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded mr-2">
+          <button className="bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded mr-2" onClick={handleApprove}>
             Approve
           </button>
           <button className="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded">
