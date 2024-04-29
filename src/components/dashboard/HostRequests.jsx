@@ -4,12 +4,12 @@ import axios from 'axios';
 const HostRequests = () => {
   return (
     <div className='py-8'>
-      <FilteredCard />
+      <FilteredCard hostId={'1234'}/>
     </div>
   );
 };
 
-const FilteredCard = () => {
+const FilteredCard = ({hostId}) => {
   const [visitationRequests, setVisitationRequests] = useState([]);
 
   useEffect(() => {
@@ -26,7 +26,7 @@ const FilteredCard = () => {
   }, []);
 
   // Filter visitation requests based on staff ID
-  const filteredRequests = visitationRequests.filter((request) => request.staffid === '1234');
+  const filteredRequests = visitationRequests.filter((request) => request.staffid === hostId);
 
   // If there are no requests matching the ID, return null
   if (filteredRequests.length === 0) {
@@ -59,7 +59,7 @@ const Card = ({ request }) => {
           </div>
           <div>
             <div className="font-semibold text-gray-600">Visitor Type</div>
-            <div className="text-gray-700">Visitor</div>
+            <div className="text-gray-700">Vendor</div>
           </div>
         </div>
         <div className="justify-between items-center mb-4">

@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-const Hosts = ({hostId}) => {
+const Hosts = ({hostId, visitorId}) => {
   const [visitationRequests, setVisitationRequests] = useState([]);
   const [employees, setEmployees] = useState([]);
-  const id = 23456789;
+  // const id = 23456789;
 
   
   const requestBody = {
     "createdat": "now()",
-    "id": id,
-    "visitorname": "Temi",
+    "id": visitorId,
+    "visitorname": "Emily",
     "visitorphone": "string",
     "visitoremail": "string",
     "plannedvisitdate": "2024-04-27",
@@ -20,7 +20,7 @@ const Hosts = ({hostId}) => {
     "hostphoneno": "string",
     "hostemailaddress": "string",
     "hostofficeextensiom": "string",
-    "status": "Checked In",
+    "status": "Awaiting",
     "statusdate": "now()",
     "statusbystaffid": "string"
   };
@@ -124,7 +124,7 @@ const handleCheckIn = async (id) => {
             <div className="col-span-1 text-center" style={{color: request.hostDecision ? 'green' : 'red'}}>
               {request.hostDecision ? 'Accepted' : 'Declined'}
             </div>
-            <button onClick={() => {submit(id, requestBody); handleCheckIn(request.id)}}>
+            <button onClick={() => {submit(visitorId, requestBody); handleCheckIn(request.id)}}>
               {request.hostDecision ? 'Check out' : 'Check in'}
             </button>
           </div>

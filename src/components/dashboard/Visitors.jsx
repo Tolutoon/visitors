@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
+import Header from '../header/Header';
 import axios from "axios";
 
 const Visitors = () => {
@@ -56,6 +57,7 @@ const Visitors = () => {
 
   return (
     <div className="container mx-auto px-8">
+      <Header/>
       <div className="grid grid-cols-9 gap-2 border-b border-gray-300 py-8 ">
         <div className="col-span-1 text-center">Visitor's name</div>
         <div className="col-span-1 text-center">Visitor's Type</div>

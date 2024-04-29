@@ -18,8 +18,8 @@ function App() {
   //   </div>
   <Routes>
     <Route path='/' element={<Visitors/>}/>
-    <Route path='/requests' element={<HostRequests />}/>
-    <Route path="/host" element={<Hosts hostId={'1234'}/>}/>
+    <Route path='/requests' element={<HostRequests/>}/>
+    <Route path="/host" element={<Hosts hostId={'1234'} visitorId={'87654321'}/>}/>
   </Routes>
   );
 }
