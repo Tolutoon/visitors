@@ -31,9 +31,9 @@ const FilteredCard = ({ hostId }) => {
   // Filter visitation requests based on staff ID and status not equal to "Approved"
   const filteredRequests = visitationRequests.filter((request) => request.staffid === hostId && request.status !== "Approved");
 
-  // If there are no requests matching the ID or all are approved, return null
+  // If there are no requests matching the ID or all are approved, render a message
   if (filteredRequests.length === 0) {
-    return null;
+    return <div className="text-center">You have no visitation requests</div>;
   }
 
   // Render the card with filtered requests
