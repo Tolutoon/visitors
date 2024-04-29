@@ -214,7 +214,7 @@ const Header = () => {
                   </div>
                   <button
                     type="submit"
-                    className="bg-black text-white font-bold py-2 px-4 rounded hover:bg-black-700 focus:outline-none focus:shadow-outline"
+                    className="bg-black text-white font-bold py-2 px-4 rounded hover:bg-black-700 focus:outline-none focus:shadow-outline ml-auto cursor-p"
                   >
                     Submit Request
                   </button>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import axios from "axios";
 
 const Visitors = () => {
@@ -54,8 +55,8 @@ const Visitors = () => {
   };
 
   return (
-    <div className="container mx-auto">
-      <div className="grid grid-cols-8 gap-2 border-b border-gray-300 py-8">
+    <div className="container mx-auto px-8">
+      <div className="grid grid-cols-9 gap-2 border-b border-gray-300 py-8 ">
         <div className="col-span-1 text-center">Visitor's name</div>
         <div className="col-span-1 text-center">Visitor's Type</div>
         <div className="col-span-1 text-center">Arrival Time</div>
@@ -68,7 +69,7 @@ const Visitors = () => {
       <div>
         {visitationRequests.map((request) => (
           <div
-            className="grid grid-cols-8 gap-2 border-b border-gray-300 py-6"
+            className="grid grid-cols-9 gap-2 border-b border-gray-300 py-6 items-center justify-center"
             key={request.id}
           >
             <div className="col-span-1 text-center font-bold">{request.visitorname}</div>
@@ -80,9 +81,20 @@ const Visitors = () => {
             <div className="col-span-1 text-center" style={{color: request.hostDecision ? 'green' : 'red'}}>
               {request.hostDecision ? 'Accepted' : 'Declined'}
             </div>
-            <button onClick={() => handleCheckIn(request.id)}>
-              {request.hostDecision ? 'Check out' : 'Check in'}
-            </button>
+            <button 
+onClick={() => handleCheckIn(request.id)}
+  style={{
+    backgroundColor: request.hostDecision ? 'red' : 'green',
+    padding: '10px 10px',
+    color: 'white',
+    border: 'none',
+    borderRadius: '5px',
+    cursor: 'pointer'
+  }}
+>
+  {request.hostDecision ? 'Check out' : 'Check in'}
+</button>
+<HiOutlineDotsHorizontal className="cursor-pointer"/>
           </div>
         ))}
       </div>
