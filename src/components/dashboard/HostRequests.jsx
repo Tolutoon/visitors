@@ -3,10 +3,10 @@ import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const HostRequests = () => {
+const HostRequests = ({hostsId}) => {
   return (
     <div className='py-8'>
-      <FilteredCard hostId={'1234'} />
+      <FilteredCard hostId={hostsId} />
       <ToastContainer />
     </div>
   );
@@ -29,7 +29,7 @@ const FilteredCard = ({ hostId }) => {
   }, []);
 
   // Filter visitation requests based on staff ID and status not equal to "Approved"
-  const filteredRequests = visitationRequests.filter((request) => request.staffid === hostId && request.status !== "Approved");
+  const filteredRequests = visitationRequests.filter((request) => request.staffid === hostId && request.status !== "Approved" && request.status !== "Declined");
 
   // If there are no requests matching the ID or all are approved, render a message
   if (filteredRequests.length === 0) {
@@ -51,7 +51,8 @@ const Card = ({ request, setVisitationRequests }) => {
     try {
       // Send PATCH request to update the request status to "Approved"
       await axios.patch(`http://ezapi.issl.ng:3333/visitationrequest?id=eq.${request.id}`, {
-        status: "Approved"
+        status: "Approved",
+        statusbystaffid: "Awaiting Check-In"
       });
       toast.success('Request approved successfully'); // Show toaster notification
 
@@ -59,6 +60,21 @@ const Card = ({ request, setVisitationRequests }) => {
       setVisitationRequests(prevRequests => prevRequests.filter(req => req.id !== request.id));
     } catch (error) {
       console.error("Error approving request:", error);
+    }
+  };
+
+
+  const handleDecline = async () => {
+    try {
+    // Send PATCH request to update status to "Declined"
+    await axios.patch(`http://ezapi.issl.ng:3333/visitationrequest?id=eq.${request.id}`, {
+        status: "Declined"
+    });
+    setVisitationRequests(prevRequests => prevRequests.filter(req => req.id !== request.id));
+    toast.error("User request declined");
+        
+    } catch (error) {
+        console.log("Error declining request:", error);
     }
   };
 
@@ -94,7 +110,7 @@ const Card = ({ request, setVisitationRequests }) => {
           <button className="bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 rounded mr-2" onClick={handleApprove}>
             Approve
           </button>
-          <button className="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded">
+          <button className="bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded" onClick={handleDecline}>
             Decline
           </button>
         </div>

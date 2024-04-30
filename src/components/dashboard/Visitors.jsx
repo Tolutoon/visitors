@@ -26,34 +26,58 @@ const Visitors = () => {
 
     fetchData();
   }, []);
+
+
   const handleCheckIn = async (id) => {
     try {
+      // Find the request with the given id
+      const requestToUpdate = visitationRequests.find((request) => request.id === id);
+      
+      // Check if the user is approved
+      if (requestToUpdate.status !== "Approved") {
+        console.log("User is not approved yet. Check-in cannot be performed.");
+        return;
+      }
+  
+      // Toggle the status between "Signed In" and "Signed Out"
+      const newStatus = requestToUpdate.statusbystaffid === "Signed In" ? "Signed Out" : "Signed In";
       const updatedRequests = visitationRequests.map((request) => {
         if (request.id === id) {
-          return { ...request, hostDecision: !request.hostDecision };
+          return { ...request, statusbystaffid: newStatus };
         }
         return request;
       });
+  
       setVisitationRequests(updatedRequests);
   
-      const updatedHostDecision = !visitationRequests.find((req) => req.id === id).hostDecision;
-      console.log("Updated host decision:", updatedHostDecision);
-  
-      // Send PATCH request to update the hostDecision field
-      await axios.patch(`http://ezapi.issl.ng:3333/visitationrequest/${id}`, {
-        hostDecision: updatedHostDecision
+      await axios.patch(`http://ezapi.issl.ng:3333/visitationrequest?id=eq.${id}`, {
+        statusbystaffid: newStatus
       });
+  
+      console.log("Patch successful. Visitor status updated.");
     } catch (error) {
       console.error("Error updating visitation request:", error);
     }
   };
   
+  
+
 
   // Function to find employee name by staffid
   const findEmployeeName = (staffid) => {
     const employee = employees.find((emp) => emp.staffid === staffid);
     return employee ? employee.name : "";
   };
+
+  // const StatusList = ({ statusArray }) => {
+  //   return (
+  //     <div>
+  //       {statusArray.map((status, index) => (
+  //         <div key={index}>{status}</div>
+  //       ))}
+  //     </div>
+  //   );
+  // };
 
   return (
     <div className="container mx-auto px-8">
@@ -79,15 +103,17 @@ const Visitors = () => {
             <div className="col-span-1 text-center">{request.plannedvisittime}</div>
             <div className="col-span-1 text-center font-bold">{findEmployeeName(request.staffid)}</div>
             <div className="col-span-1 text-center">Official</div>
-            <div className="col-span-1 text-center">{request.status}</div>
+            <div className="col-span-1 text-center" style={{ color: request.status === 'Approved' ? 'green' : 'red' }}>{request.status}</div>
+            
+
             {/* <div className="col-span-1 text-center" style={{color: request.hostDecision ? 'green' : 'red'}}>
               {request.hostDecision ? 'Accepted' : 'Declined'}
             </div> */}
              <div className="col-span-1 text-center">{request.statusbystaffid}</div>
-            <button 
-onClick={() => handleCheckIn(request.id)}
+             <button 
+  onClick={() => handleCheckIn(request.id)}
   style={{
-    backgroundColor: request.hostDecision ? 'red' : 'green',
+    backgroundColor: request.status !== 'Approved' ? 'grey' : request.statusbystaffid === 'Signed In' ? 'red' : 'green',
     padding: '10px 10px',
     color: 'white',
     border: 'none',
@@ -95,8 +121,9 @@ onClick={() => handleCheckIn(request.id)}
     cursor: 'pointer'
   }}
 >
-  {request.hostDecision ? 'Check out' : 'Check in'}
+  {request.statusbystaffid === 'Signed In' ? 'Check out' : 'Check in'}
 </button>
+
 <HiOutlineDotsHorizontal className="cursor-pointer"/>
           </div>
         ))}
