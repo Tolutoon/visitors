@@ -1,8 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 const Header = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [validPhoneNumbers, setValidPhoneNumbers] = useState([]);
+  const [validNames, setValidNames] = useState([]);
+  const [error, setError] = useState("");
+
+  const phoneNumbersUrl = "http://ezapi.issl.ng:3333/employeephone";
 
   const [formData, setFormData] = useState({
     visitorname: "",
@@ -19,6 +24,18 @@ const Header = () => {
     statusbystaffid: ""
   });
 
+  useEffect(() => {
+    // Fetching employee phone numbers
+    axios.get("http://ezapi.issl.ng:3333/employeephone")
+      .then((response) => setValidPhoneNumbers(response.data.map((record) => record.phoneno)))
+      .catch((err) => console.error("Error fetching phone numbers:", err));
+
+    // Fetching employee names
+    axios.get("http://ezapi.issl.ng:3333/employee")
+      .then((response) => setValidNames(response.data.map((record) => record.name)))
+      .catch((err) => console.error("Error fetching employee names:", err));
+  }, []);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -27,15 +44,40 @@ const Header = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const currentDate = new Date();
-    // Format the data to match the model
+    const hostPhoneNo = formData.hostphoneno.toString();
+
+    const staffIdResponse = await axios.get(`${phoneNumbersUrl}?phoneno=eq.${hostPhoneNo}`);
+    console.log(staffIdResponse)
+    const fetchedStaffId = staffIdResponse.data[0]?.staffid; // Use optional chaining
+    if (!fetchedStaffId) {
+      setError("Staff Id not found for the provided phone number");
+      return;
+    }
+
     const formattedData = {
       ...formData,
+      status: "Pending",
+      statusbystaffid: "Awaiting Check In",
+      staffid: fetchedStaffId,
       plannedvisitdate: currentDate.toISOString().slice(0, 10),
       plannedvisittime: `${currentDate.getHours()}:${currentDate.getMinutes()}`
     };
+
+ 
+
+    if (!validPhoneNumbers.includes(formData.hostphoneno.toString())) {
+      setError("Invalid phone number provided");
+      return;
+    }
+    if (!validNames.includes(formData.hostname)) {
+      setError("Invalid name provided");
+      return;
+    }
+
+
   
     // Send form data to the server using Axios post request
     axios
@@ -51,6 +93,15 @@ const Header = () => {
       })
       .catch((error) => {
         console.error("Error:", error);
+      });
+
+      setFormData({
+        visitorname: "",
+        visitorphone: "",
+        visitoremail: "",
+        hostphoneno: "",
+        hostname: "",
+        hostemailaddress: "",
       });
   };
   
@@ -89,8 +140,8 @@ const Header = () => {
           <div className="modal-container bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto">
             <div className="modal-content py-4 text-left px-6">
               {/* Modal Header */}
-              <div className="flex justify-between items-center pb-3">
-                <p className="text-xl font-bold">Visitation Form</p>
+              <div className="flex justify-between items-center pb-3 ">
+                <p className="text-2xl font-bold">Visitation Form</p>
                 <button
                   onClick={closeModal}
                   className="modal-close cursor-pointer z-50"
@@ -105,6 +156,9 @@ const Header = () => {
                   </svg>
                 </button>
               </div>
+              <p className="text-l pb-3">
+          Fill the details below to log your appointment
+        </p>
               {/* Modal Body */}
               <div>
                 <form onSubmit={handleSubmit}>
@@ -145,7 +199,7 @@ const Header = () => {
                     {/* Error message */}
                   </div>
                   <div className="mb-4">
-                    <select
+                    {/* <select
                       className="border border-gray-300 rounded-md py-2 px-4 w-full"
                       id="visitorType"
                       name="visitorType"
@@ -158,7 +212,7 @@ const Header = () => {
                       <option value="family">Family</option>
                       <option value="friend">Friend</option>
                       <option value="vendor">Vendor</option>
-                    </select>
+                    </select> */}
                     {/* Error message */}
                   </div>
                   <div className="mb-4">
@@ -186,7 +240,7 @@ const Header = () => {
                     {/* Error message */}
                   </div>
                   <div className="mb-4">
-                    <select
+                    {/* <select
                       className="border border-gray-300 rounded-md py-2 px-4 w-full"
                       id="purpose"
                       name="purpose"
@@ -198,12 +252,12 @@ const Header = () => {
                       </option>
                       <option value="official">Official</option>
                       <option value="personal">Personal</option>
-                    </select>
+                    </select> */}
                     {/* Error message */}
                   </div>
                   <div className="mb-4">
                     <textarea
-                      className="border border-gray-300 rounded-md py-2 px-4 w-full"
+                      className="border border-gray-300 rounded-md pb-8 pt-2 px-4 w-full"
                       id="privateNote"
                       name="privateNote"
                       placeholder="Private Note"
@@ -212,6 +266,7 @@ const Header = () => {
                     />
                     {/* Error message */}
                   </div>
+                  {error && <div className="error">{error}</div>}
                   <button
                     type="submit"
                     className="bg-black text-white font-bold py-2 px-4 rounded hover:bg-black-700 focus:outline-none focus:shadow-outline ml-auto cursor-p"

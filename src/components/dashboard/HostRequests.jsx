@@ -93,17 +93,17 @@ const Card = ({ request, setVisitationRequests }) => {
           </div>
           <div>
             <div className="font-semibold text-gray-600">Visitor Type</div>
-            <div className="text-gray-700">Vendor</div>
+            <div className="text-gray-700">Visitor</div>
           </div>
         </div>
         <div className="justify-between items-center mb-4">
           <div>
             <div className="font-semibold text-gray-600">Purpose for Visit</div>
-            <div className="text-gray-700">Reasons</div>
+            <div className="text-gray-700">Official</div>
           </div>
           <div>
             <div className="font-semibold text-gray-600">Private Note</div>
-            <div className="text-gray-700">Private Note</div>
+            <div className="text-gray-700">{request.hostemailaddress}</div>
           </div>
         </div>
         <div className="flex justify-center">

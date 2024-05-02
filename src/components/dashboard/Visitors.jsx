@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import Header from '../header/Header';
+import { toast, ToastContainer } from 'react-toastify';
 import axios from "axios";
 
 const Visitors = () => {
@@ -27,7 +28,6 @@ const Visitors = () => {
     fetchData();
   }, []);
 
-
   const handleCheckIn = async (id) => {
     try {
       // Find the request with the given id
@@ -50,34 +50,28 @@ const Visitors = () => {
   
       setVisitationRequests(updatedRequests);
   
-      await axios.patch(`http://ezapi.issl.ng:3333/visitationrequest?id=eq.${id}`, {
-        statusbystaffid: newStatus
-      });
-  
-      console.log("Patch successful. Visitor status updated.");
+      if (newStatus === "Signed Out") {
+        // Delete the user if signing out
+        await axios.delete(`http://ezapi.issl.ng:3333/visitationrequest?id=eq.${id}`);
+        console.log("User deleted successfully.");
+        toast.success('User Successfully Deleted');
+      } else {
+        // Update the status if signing in
+        await axios.patch(`http://ezapi.issl.ng:3333/visitationrequest?id=eq.${id}`, {
+          statusbystaffid: newStatus
+        });
+        console.log("Patch successful. Visitor status updated.");
+      }
     } catch (error) {
       console.error("Error updating visitation request:", error);
     }
   };
   
-  
-
-
   // Function to find employee name by staffid
   const findEmployeeName = (staffid) => {
     const employee = employees.find((emp) => emp.staffid === staffid);
     return employee ? employee.name : "";
   };
-
-  // const StatusList = ({ statusArray }) => {
-  //   return (
-  //     <div>
-  //       {statusArray.map((status, index) => (
-  //         <div key={index}>{status}</div>
-  //       ))}
-  //     </div>
-  //   );
-  // };
 
   return (
     <div className="container mx-auto px-8">
@@ -92,42 +86,41 @@ const Visitors = () => {
         <div className="col-span-1 text-center">Visitor's status</div>
       </div>
 
-      <div>
-        {visitationRequests.map((request) => (
-          <div
-            className="grid grid-cols-9 gap-2 border-b border-gray-300 py-6 items-center justify-center"
-            key={request.id}
-          >
-            <div className="col-span-1 text-center font-bold">{request.visitorname}</div>
-            <div className="col-span-1 text-center">Visitor</div>
-            <div className="col-span-1 text-center">{request.plannedvisittime}</div>
-            <div className="col-span-1 text-center font-bold">{findEmployeeName(request.staffid)}</div>
-            <div className="col-span-1 text-center">Official</div>
-            <div className="col-span-1 text-center" style={{ color: request.status === 'Approved' ? 'green' : 'red' }}>{request.status}</div>
-            
-
-            {/* <div className="col-span-1 text-center" style={{color: request.hostDecision ? 'green' : 'red'}}>
-              {request.hostDecision ? 'Accepted' : 'Declined'}
-            </div> */}
-             <div className="col-span-1 text-center">{request.statusbystaffid}</div>
-             <button 
-  onClick={() => handleCheckIn(request.id)}
-  style={{
-    backgroundColor: request.status !== 'Approved' ? 'grey' : request.statusbystaffid === 'Signed In' ? 'red' : 'green',
-    padding: '10px 10px',
-    color: 'white',
-    border: 'none',
-    borderRadius: '5px',
-    cursor: 'pointer'
-  }}
->
-  {request.statusbystaffid === 'Signed In' ? 'Check out' : 'Check in'}
-</button>
-
-<HiOutlineDotsHorizontal className="cursor-pointer"/>
-          </div>
-        ))}
-      </div>
+      {visitationRequests.length === 0 ? (
+        <div className="text-center py-4">No visitor's log</div>
+      ) : (
+        <div>
+          {visitationRequests.map((request) => (
+            <div
+              className="grid grid-cols-9 gap-2 border-b border-gray-300 py-6 items-center justify-center"
+              key={request.id}
+            >
+              <div className="col-span-1 text-center font-bold">{request.visitorname}</div>
+              <div className="col-span-1 text-center">Visitor</div>
+              <div className="col-span-1 text-center">{request.plannedvisittime}</div>
+              <div className="col-span-1 text-center font-bold">{request.hostname}</div>
+              <div className="col-span-1 text-center">Official</div>
+              <div className="col-span-1 text-center" style={{ color: request.status === 'Approved' ? 'green' : 'red' }}>{request.status}</div>
+              <div className="col-span-1 text-center">{request.statusbystaffid}</div>
+              <button 
+                onClick={() => handleCheckIn(request.id)}
+                style={{
+                  backgroundColor: request.status !== 'Approved' ? 'grey' : request.statusbystaffid === 'Signed In' ? 'red' : 'green',
+                  padding: '10px 10px',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '5px',
+                  cursor: 'pointer'
+                }}
+              >
+                {request.statusbystaffid === 'Signed In' ? 'Check out' : 'Check in'}
+              </button>
+              <HiOutlineDotsHorizontal className="cursor-pointer"/>
+            </div>
+          ))}
+        </div>
+      )}
+      <ToastContainer />
     </div>
   );
 };
