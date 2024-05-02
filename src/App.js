@@ -2,12 +2,14 @@ import { Routes, Route } from "react-router-dom";
 // import HostRequests from './components/dashboard/HostRequests';
 import RequestsWithUserId from "./components/RequestsWithUserId";
 import Visitors from './components/dashboard/Visitors';
+import FormFloatingBasicExample from "./components/Form/VisitorsForm";
 
 
 function App() {
   return (
   <Routes>
     <Route path='/' element={<Visitors/>}/>
+    <Route path="/form" element={<FormFloatingBasicExample/>}/>
     <Route path='/requests/:userId' element={<RequestsWithUserId />} />
     {/* <Route path='/requests' element={<HostRequests hostsId={'1234'}/>}/> */}
     {/* <Route path="/host" element={<Hosts hostId={'1234'} visitorId={'87654321'}/>}/> */}
