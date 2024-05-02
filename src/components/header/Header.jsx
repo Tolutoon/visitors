@@ -37,11 +37,15 @@ const Header = () => {
   }, []);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { id, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: value
+      [id]: value,
     }));
+    // setValidationErrors((prevErrors) => ({
+    //   ...prevErrors,
+    //   [id]: "",
+    // }));
   };
 
   const handleSubmit = async (e) => {
@@ -258,10 +262,10 @@ const Header = () => {
                   <div className="mb-4">
                     <textarea
                       className="border border-gray-300 rounded-md pb-8 pt-2 px-4 w-full"
-                      id="privateNote"
+                      id="hostemailaddress"
                       name="privateNote"
                       placeholder="Private Note"
-                      value={formData.privateNote}
+                      value={formData.hostemailaddress}
                       onChange={handleChange}
                     />
                     {/* Error message */}

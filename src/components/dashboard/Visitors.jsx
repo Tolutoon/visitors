@@ -52,9 +52,12 @@ const Visitors = () => {
   
       if (newStatus === "Signed Out") {
         // Delete the user if signing out
-        await axios.delete(`http://ezapi.issl.ng:3333/visitationrequest?id=eq.${id}`);
-        console.log("User deleted successfully.");
-        toast.success('User Successfully Deleted');
+        await axios.patch(`http://ezapi.issl.ng:3333/visitationrequest?id=eq.${id}`, {
+          statusbystaffid: 'Signed Out',
+        });
+
+        console.log("User SIgned Out.");
+        toast.success('User Signed Out');
       } else {
         // Update the status if signing in
         await axios.patch(`http://ezapi.issl.ng:3333/visitationrequest?id=eq.${id}`, {
@@ -86,40 +89,44 @@ const Visitors = () => {
         <div className="col-span-1 text-center">Visitor's status</div>
       </div>
 
-      {visitationRequests.length === 0 ? (
-        <div className="text-center py-4">No visitor's log</div>
-      ) : (
-        <div>
-          {visitationRequests.map((request) => (
-            <div
-              className="grid grid-cols-9 gap-2 border-b border-gray-300 py-6 items-center justify-center"
-              key={request.id}
-            >
-              <div className="col-span-1 text-center font-bold">{request.visitorname}</div>
-              <div className="col-span-1 text-center">Visitor</div>
-              <div className="col-span-1 text-center">{request.plannedvisittime}</div>
-              <div className="col-span-1 text-center font-bold">{request.hostname}</div>
-              <div className="col-span-1 text-center">Official</div>
-              <div className="col-span-1 text-center" style={{ color: request.status === 'Approved' ? 'green' : 'red' }}>{request.status}</div>
-              <div className="col-span-1 text-center">{request.statusbystaffid}</div>
-              <button 
-                onClick={() => handleCheckIn(request.id)}
-                style={{
-                  backgroundColor: request.status !== 'Approved' ? 'grey' : request.statusbystaffid === 'Signed In' ? 'red' : 'green',
-                  padding: '10px 10px',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '5px',
-                  cursor: 'pointer'
-                }}
-              >
-                {request.statusbystaffid === 'Signed In' ? 'Check out' : 'Check in'}
-              </button>
-              <HiOutlineDotsHorizontal className="cursor-pointer"/>
-            </div>
-          ))}
+      {visitationRequests.filter(request => request.statusbystaffid !== 'Signed Out').length === 0 ? (
+  <div className="text-center py-4">No visitor's log</div>
+) : (
+  <div>
+    {visitationRequests
+      .filter(request => request.statusbystaffid !== 'Signed Out') // Filter out visitors with status 'Signed Out'
+      .map(request => (
+        <div
+          className="grid grid-cols-9 gap-2 border-b border-gray-300 py-6 items-center justify-center"
+          key={request.id}
+        >
+          <div className="col-span-1 text-center font-bold">{request.visitorname}</div>
+          <div className="col-span-1 text-center">Visitor</div>
+          <div className="col-span-1 text-center">{request.plannedvisittime}</div>
+          <div className="col-span-1 text-center font-bold">{request.hostname}</div>
+          <div className="col-span-1 text-center">Official</div>
+          <div className="col-span-1 text-center" style={{ color: request.status === 'Approved' ? 'green' : 'red' }}>{request.status}</div>
+          <div className="col-span-1 text-center">{request.statusbystaffid}</div>
+          <button 
+            onClick={() => handleCheckIn(request.id)}
+            style={{
+              backgroundColor: request.status !== 'Approved' || request.statusbystaffid === 'Signed Out' ? 'grey' : request.statusbystaffid === 'Signed In' ? 'red' : 'green',
+              padding: '10px 10px',
+              color: 'white',
+              border: 'none',
+              borderRadius: '5px',
+              cursor: 'pointer'
+            }}
+          >
+            {request.statusbystaffid === 'Signed In' ? 'Check out' : 'Check in'}
+          </button>
+          <HiOutlineDotsHorizontal className="cursor-pointer"/>
         </div>
-      )}
+      ))}
+  </div>
+)}
+
+
       <ToastContainer />
     </div>
   );
