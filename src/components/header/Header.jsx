@@ -119,7 +119,7 @@ const Header = () => {
   };
 
   return (
-    <div className="px-10 py-8 pb-11 container mx-auto max-w-7xl">
+    <div className="py-8 pb-11 container mx-auto max-w-7xl">
       <div className="flex justify-between items-center">
         <h1 className="font-bold text-2xl">Visitor Log</h1>
         <div className="flex items-center">

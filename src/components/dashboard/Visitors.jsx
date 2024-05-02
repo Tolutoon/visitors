@@ -1,12 +1,36 @@
 import React, { useState, useEffect } from "react";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import Header from '../header/Header';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import { toast, ToastContainer } from 'react-toastify';
 import axios from "axios";
+
+
+
+const DatePickerExample = () => {
+  const [selectedDate, setSelectedDate] = useState(null);
+
+  return (
+    <div className="w-full max-w-xs">
+      <label htmlFor="datepicker" className="sr-only">
+        Select Date
+      </label>
+      <DatePicker
+        id="datepicker"
+        selected={selectedDate}
+        onChange={(date) => setSelectedDate(date)}
+        placeholderText="Select Date"
+        className="w-full mt-1 py-4 px-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-400"
+      />
+    </div>
+  );
+};
 
 const Visitors = () => {
   const [visitationRequests, setVisitationRequests] = useState([]);
   const [employees, setEmployees] = useState([]);
+  const [selectedVisitorType, setSelectedVisitorType] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -76,9 +100,39 @@ const Visitors = () => {
     return employee ? employee.name : "";
   };
 
+  const handleVisitorTypeChange = (event) => {
+    setSelectedVisitorType(event.target.value);
+  };
+
   return (
     <div className="container mx-auto px-8">
       <Header/>
+      <div className="flex max-w-600px justify-end">
+
+      {/* Dropdown filter for visitor types */}
+      <div className="py-4 border border-gray-300 rounded-md w-min px-2 mr-4">
+        {/* <label htmlFor="visitorTypeFilter" className="mr-2">Filter by Visitor Type:</label> */}
+        <select id="visitorTypeFilter" value={selectedVisitorType} onChange={handleVisitorTypeChange}>
+          <option value="">All Visitors</option>
+          <option value="Visitor">Visitor</option>
+          <option value="Employee">Employee</option>
+          {/* Add more visitor types as needed */}
+        </select>
+      </div>
+      <div className="py-4 border border-gray-300 rounded-md w-min px-2 mr-2">
+        {/* <label htmlFor="visitorTypeFilter" className="mr-2">Filter by Visitor Type:</label> */}
+        <select id="visitorTypeFilter" value={selectedVisitorType} onChange={handleVisitorTypeChange}>
+          <option value="">All</option>
+          <option value="Visitor">Visitor</option>
+          <option value="Employee">Employee</option>
+          {/* Add more visitor types as needed */}
+        </select>
+      </div>
+      <DatePickerExample/>
+      </div>
+
+      {/* End of dropdown filter */}
+
       <div className="grid grid-cols-9 gap-2 border-b border-gray-300 py-8 ">
         <div className="col-span-1 text-center">Visitor's name</div>
         <div className="col-span-1 text-center">Visitor's Type</div>
