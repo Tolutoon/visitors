@@ -86,6 +86,7 @@ const FormFloatingBasicExample = () => {
 
       const defaultFormData = {
         ...formData,
+        hostphoneno: cleanedPhoneNumber,
         status: "Pending",
         statusbystaffid: "Awaiting Check-In",
         staffid: fetchedStaffId,
