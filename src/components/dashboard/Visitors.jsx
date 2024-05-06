@@ -159,7 +159,7 @@ const Visitors = () => {
           <div className="col-span-1 text-center">{request.plannedvisittime}</div>
           <div className="col-span-1 text-center font-bold">{request.hostname}</div>
           <div className="col-span-1 text-center">Official</div>
-          <div className="col-span-1 text-center" style={{ color: request.status === 'Approved' ? 'green' : 'red' }}>{request.status}</div>
+          <div className="col-span-1 text-center" style={{ color: request.status === 'Approved' ? 'green' : request.status === 'Rescheduled' ? '#A4A40A' : 'red' }}>{request.status}</div>
           <div className="col-span-1 text-center">{request.statusbystaffid}</div>
           <button 
             onClick={() => handleCheckIn(request.id)}
