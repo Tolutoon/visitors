@@ -38,7 +38,7 @@ const FormFloatingBasicExample = () => {
   const [validationErrors, setValidationErrors] = useState({});
   const [error, setError] = useState("");
   const [validPhoneNumbers, setValidPhoneNumbers] = useState([]);
-  const [phoneMask, setPhoneMask] = useState("+234 (___) ___-____");
+  const [phoneMask, setPhoneMask] = useState("___________"); 
   const [validNames, setValidNames] = useState([]);
   const [showModal, setShowModal] = useState(false); // State for modal
 
@@ -145,10 +145,10 @@ const FormFloatingBasicExample = () => {
   useEffect(() => {
     if (formData.visitorphone.startsWith("+234")) {
       // Set mask for Nigeria
-      setPhoneMask("+234 (___) ___-____");
+      setPhoneMask("___________");
     } else {
       // Default mask
-      setPhoneMask("+234 (___) ___-____");
+      setPhoneMask("___________");
     }
   }, [formData.visitorphone]);
 

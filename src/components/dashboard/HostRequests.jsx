@@ -248,9 +248,17 @@ const ReferModal = ({ setShowModal, currentStaffId }) => {
   };
 
   const handleRefer = () => {
-    // Add your logic for referring here
-    console.log('Referring to:', selectedOption);
+    // Find the employee object corresponding to the selected name
+    const selectedEmployee = employees.find((employee) => employee.name === selectedOption);
+    // Check if the employee object is found
+    if (selectedEmployee) {
+      // Log the staff ID of the selected employee
+      console.log('Staff ID of selected employee:', selectedEmployee.staffid);
+    } else {
+      console.error('Selected employee not found');
+    }
   };
+  
 
   return (
     <div className="fixed z-10 inset-0 overflow-y-auto">
