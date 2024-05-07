@@ -55,7 +55,7 @@ const FilteredCard = ({ hostId }) => {
         </button>
       </div>
       {/* Render rescheduled visits component */}
-      {showRescheduledVisits && <RescheduledVisitation />}
+      {showRescheduledVisits && <RescheduledVisitation hostId={hostId} />}
       {/* Render filtered requests */}
       {filteredRequests.map((request) => (
         <Card key={request.id} request={request} setVisitationRequests={setVisitationRequests} setShowModal={setShowModal} setSelectedRequest={setSelectedRequest} />
@@ -129,16 +129,20 @@ const Card = ({ request, setVisitationRequests, setShowModal, setSelectedRequest
           </div>
         </div>
         <div className="flex">
-        <button className="bg-black hover:bg-black text-white font-semibold px-8 py-2 mb-2 rounded w-full">
-        <BsFillPersonLinesFill />
-          </button>
+        <button className="border border-black hover:bg-black hover:text-white text-black font-semibold px-8 py-2 mb-2 rounded w-full">
+  <BsFillPersonLinesFill />
+</button>
+
+          
           <button className='flex items-center justify-center px-4 py-2 border border-yellow-500 bg-white-400 text-yellow-500 rounded-md mb-2 w-full' onClick={handleReschedule}> <FaClock /></button>
+          <button className="border border-red-500 hover:bg-red-500 hover:text-white text-red-500 font-semibold px-8 py-2 mb-2 rounded w-fit" onClick={handleDecline}>
+  Decline
+</button>
           <button className="bg-green-500 hover:bg-green-600 text-white font-semibold px-8 py-2 mb-2 rounded w-fit" onClick={handleApprove}>
             Approve
           </button>
-          <button className="bg-red-500 hover:bg-red-600 text-white font-semibold px-8 py-2 mb-2 rounded w-fit" onClick={handleDecline}>
-            Decline
-          </button>
+
+
         </div>
       </div>
     </div>
@@ -222,15 +226,15 @@ const Modal = ({ request, setShowModal }) => {
 };
 
 
-const RescheduledVisitation = () => {
+const RescheduledVisitation = ({ hostId }) => {
   const [rescheduledVisits, setRescheduledVisits] = useState([]);
 
   useEffect(() => {
     const fetchRescheduledVisits = async () => {
       try {
         const response = await axios.get("http://ezapi.issl.ng:3333/visitationrequest");
-        // Filter users with the status of "Rescheduled"
-        const filteredVisits = response.data.filter((visit) => visit.status === "Rescheduled");
+        // Filter users with the status of "Rescheduled" and matching staff ID
+        const filteredVisits = response.data.filter((visit) => visit.status === "Rescheduled" && visit.staffid === hostId);
         setRescheduledVisits(filteredVisits);
       } catch (error) {
         console.error("Error fetching rescheduled visits:", error);
@@ -238,54 +242,7 @@ const RescheduledVisitation = () => {
     };
 
     fetchRescheduledVisits();
-  }, []);
-
-  // const PatchRequestAtTime = ({ time, request }) => {
-  //   const [status, setStatus] = useState('');
-  
-  //   useEffect(() => {
-  //     // Function to send a PATCH request at a specified time
-  //     const sendPatchRequestAtTime = (time, request) => {
-  //       // Calculate the time difference between current time and the specified time
-  //       const timeDifference = time - new Date().getTime();
-  
-  //       // If the time difference is negative, it means the specified time has already passed
-  //       if (timeDifference <= 0) {
-  //         console.error('Specified time has already passed');
-  //         return;
-  //       }
-  
-  //       // Set a timeout to execute the PATCH request after the specified time
-  //       setTimeout(async () => {
-  //         try {
-  //           // Make the PATCH request
-  //           const response = await axios.patch(`http://ezapi.issl.ng:3333/visitationrequest?id=eq.${request.id}`, {
-  //             status: "Pending",
-  //             statusbystaffid: "Awaiting Check In"
-  //           });
-  //           console.log('Patch Successful'); // Log success message
-  //           setStatus(response.data.message); // Update status state with response message
-  //         } catch (error) {
-  //           console.error('Error sending PATCH request:', error);
-  //         }
-  //       }, timeDifference);
-  //     };
-  
-  //     // Log the current time before executing the PATCH request
-  //     const currentTime = new Date().getTime();
-  //     console.log('Current Time:', currentTime);
-  //     sendPatchRequestAtTime(time, request);
-  //   }, [time, request]);
-  
-  //   return (
-  //     <div>
-  //       {/* No button needed */}
-  //       {status && <div>Status: {status}</div>}
-  //     </div>
-  //   );
-  // };
-
-  
+  }, [hostId]);
 
   return (
     <div className="flex justify-center">
