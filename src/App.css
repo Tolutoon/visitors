@@ -2,3 +2,16 @@
   max-width: 880px;
   margin: auto;
 }
+
+
+
+/* Center the tab bar heading */
+.react-tabs__tab-list {
+  justify-content: center;
+}
+
+/* Limit the card width */
+.max-w-sm {
+  max-width: 20rem; /* Adjust the width as needed */
+  margin: 0 auto; /* Center the card */
+}

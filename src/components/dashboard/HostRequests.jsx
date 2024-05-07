@@ -57,7 +57,9 @@ const FilteredCard = ({ hostId }) => {
         <Card key={request.id} request={request} setShowModal={setShowModal} setSelectedRequest={setSelectedRequest} setShowReferModal={setShowReferModal} setVisitationRequests={setVisitationRequests} />
       ))}
       {showModal && <RescheduleModal request={selectedRequest} setShowModal={setShowModal} />}
-      {showReferModal && <ReferModal request={selectedRequest} setShowModal={setShowReferModal} currentStaffId={hostId}/>}
+      {showReferModal && filteredRequests.map((request) => (
+  <ReferModal key={request.id} request={request} setShowModal={setShowReferModal} currentStaffId={hostId} />
+))}
     </div>
   );
 };
@@ -222,7 +224,7 @@ const RescheduleModal = ({ request, setShowModal }) => {
 };
 
 
-const ReferModal = ({ setShowModal, currentStaffId }) => {
+const ReferModal = ({ request, setShowModal, currentStaffId }) => {
   const handleCloseModal = () => {
     setShowModal(false);
   };
@@ -247,17 +249,39 @@ const ReferModal = ({ setShowModal, currentStaffId }) => {
     setSelectedOption(event.target.value);
   };
 
-  const handleRefer = () => {
-    // Find the employee object corresponding to the selected name
-    const selectedEmployee = employees.find((employee) => employee.name === selectedOption);
-    // Check if the employee object is found
-    if (selectedEmployee) {
-      // Log the staff ID of the selected employee
-      console.log('Staff ID of selected employee:', selectedEmployee.staffid);
+  const handleRefer = async () => {
+    // Check if a name is selected
+    if (selectedOption) {
+      // Find the selected employee
+      const selectedEmployee = employees.find((employee) => employee.name === selectedOption);
+      
+      // Check if the employee object is found
+      if (selectedEmployee) {
+        try {
+          // Make the PATCH request to update the visitor
+          console.log(request.id);
+          await axios.patch(`http://ezapi.issl.ng:3333/visitationrequest?id=eq.${request.id}`, {
+            // Update the staffid and hostname according to the selected employee
+            staffid: selectedEmployee.staffid,
+            hostname: selectedOption
+          });
+    
+          // Log a success message
+          console.log('PATCH request sent successfully to update visitor:', request.id);
+        } catch (error) {
+          // Log an error message if the PATCH request fails
+          console.error('Error sending PATCH request to update visitor:', error);
+        }
+      } else {
+        console.error('Selected employee not found');
+      }
     } else {
-      console.error('Selected employee not found');
+      console.error('No employee name selected');
     }
   };
+  
+  
+  
   
 
   return (
