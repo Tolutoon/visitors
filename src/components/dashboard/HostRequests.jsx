@@ -55,7 +55,7 @@ const FilteredCard = ({ hostId }) => {
         <Card key={request.id} request={request} setShowModal={setShowModal} setSelectedRequest={setSelectedRequest} setShowReferModal={setShowReferModal} setVisitationRequests={setVisitationRequests} />
       ))}
       {showModal && <RescheduleModal request={selectedRequest} setShowModal={setShowModal} />}
-      {showReferModal && <ReferModal request={selectedRequest} setShowModal={setShowReferModal}/>}
+      {showReferModal && <ReferModal request={selectedRequest} setShowModal={setShowReferModal} currentStaffId={hostId}/>}
     </div>
   );
 };
@@ -217,7 +217,7 @@ const RescheduleModal = ({ request, setShowModal }) => {
 };
 
 
-const ReferModal = ({ setShowModal }) => {
+const ReferModal = ({ setShowModal, currentStaffId }) => {
   const handleCloseModal = () => {
     setShowModal(false);
   };
@@ -267,11 +267,13 @@ const ReferModal = ({ setShowModal }) => {
                 <div className="mt-2">
                   <select value={selectedOption} onChange={handleSelectChange} className="block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
                     <option value="">Select an option</option>
-                    {employees.map((employee) => (
-                      <option key={employee.id} value={employee.name}>
-                        {employee.name}
-                      </option>
-                    ))}
+                    {employees
+                      .filter((employee) => employee.staffid !== currentStaffId)
+                      .map((employee) => (
+                        <option key={employee.id} value={employee.name}>
+                          {employee.name}
+                        </option>
+                      ))}
                   </select>
                   <button onClick={handleRefer} className="mt-8 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black focus:outline-none focus:ring-2 focus:ring-offset-2">
                     Refer
