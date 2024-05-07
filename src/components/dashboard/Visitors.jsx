@@ -107,8 +107,9 @@ const Visitors = () => {
   return (
     <div className="container mx-auto px-8">
       <Header/>
+      
       <div className="flex max-w-600px justify-end">
-
+        
       {/* Dropdown filter for visitor types */}
       <div className="py-4 border border-gray-300 rounded-md w-min px-2 mr-4">
         {/* <label htmlFor="visitorTypeFilter" className="mr-2">Filter by Visitor Type:</label> */}

@@ -1,7 +1,28 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useMask } from "@react-input/mask";
+import { ToastContainer, toast } from "react-toastify";
 
+// Modal component
+const Modal = ({ isOpen, onClose }) => {
+  return (
+    <>
+      {isOpen && (
+        <div className="fixed z-50 inset-0 overflow-y-auto">
+          <div className="flex items-start justify-center min-h-screen">
+            <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+            <div className="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg sm:w-full mt-10">
+              <div className="bg-white p-8">
+                <p className="text-green-500 text-xl font-bold mb-4">Submission Successful!</p>
+                <button onClick={onClose} className="bg-black text-white px-4 py-2 rounded-md">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
+};
 
 const FormFloatingBasicExample = () => {
   const [formData, setFormData] = useState({
@@ -19,6 +40,8 @@ const FormFloatingBasicExample = () => {
   const [validPhoneNumbers, setValidPhoneNumbers] = useState([]);
   const [phoneMask, setPhoneMask] = useState("+234 (___) ___-____");
   const [validNames, setValidNames] = useState([]);
+  const [showModal, setShowModal] = useState(false); // State for modal
+
   const apiUrl = "http://ezapi.issl.ng:3333/employee";
   const phoneNumbersUrl = "http://ezapi.issl.ng:3333/employeephone";
   const visitationRequest = "http://ezapi.issl.ng:3333/visitationrequest";
@@ -61,18 +84,22 @@ const FormFloatingBasicExample = () => {
 
     const hostPhoneNo = formData.hostphoneno.toString();
     const cleanedPhoneNumber = hostPhoneNo.replace(/\D/g, "");
-    console.log(cleanedPhoneNumber);
 
     if (!validPhoneNumbers.includes(cleanedPhoneNumber)) {
-      setError("Invalid phone number provided");
+      const notify = () => toast.warn("Invalid Phone Number Provided")
+      notify()
+      // setError("Invalid phone number provided");
       return;
     }
     if (!validNames.includes(formData.hostname)) {
-      setError("Invalid name provided");
+      // setError("Invalid name provided");
+      const notify = () => toast.warn("Invalid name provided")
+      notify()
       return;
     }
 
     try {
+      // Your submission logic here...
       const staffIdResponse = await axios.get(`${phoneNumbersUrl}?phoneno=eq.${cleanedPhoneNumber}`);
       console.log(staffIdResponse);
       const fetchedStaffId = staffIdResponse.data[0]?.staffid;
@@ -95,6 +122,10 @@ const FormFloatingBasicExample = () => {
       await axios.post(visitationRequest, defaultFormData);
       console.log("Form data submitted successfully");
 
+      // Show modal on successful submission
+      setShowModal(true);
+
+      // Reset form data, error, and validation errors
       setFormData({
         visitorname: "",
         visitorphone: "",
@@ -193,7 +224,7 @@ const FormFloatingBasicExample = () => {
         
         <div className="relative">
           <input
-          ref={whoToSeePhoneNumberRef}
+            ref={whoToSeePhoneNumberRef}
             type="tel"
             id="hostphoneno"
             value={formData.hostphoneno}
@@ -250,7 +281,11 @@ const FormFloatingBasicExample = () => {
         <div className="flex justify-end">
           <button type="submit" id="btn" className="w-60 bg-black text-white py-4 rounded-md">Submit Request</button>
         </div>
+        <ToastContainer />
       </form>
+
+      {/* Render modal */}
+      <Modal isOpen={showModal} onClose={() => setShowModal(false)} />
     </div>
   );
 };

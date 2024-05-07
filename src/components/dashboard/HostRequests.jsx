@@ -4,15 +4,21 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import DatePickerExample from '../DatePickers';
 import TimePicker from '../TimePicker';
+import PatchRequestAtTime from '../PatchTime';
+import { FaClock } from "react-icons/fa6";
+import { BsFillPersonLinesFill } from "react-icons/bs";
+
 
 const HostRequests = ({ hostsId }) => {
   return (
     <div className='py-8'>
       <FilteredCard hostId={hostsId} />
+      <PatchRequestAtTime/>
       <ToastContainer />
     </div>
   );
 };
+
 
 const FilteredCard = ({ hostId }) => {
   const [visitationRequests, setVisitationRequests] = useState([]);
@@ -50,14 +56,10 @@ const FilteredCard = ({ hostId }) => {
       </div>
       {/* Render rescheduled visits component */}
       {showRescheduledVisits && <RescheduledVisitation />}
-      {/* Render filtered requests or "No visitation request" */}
-      {filteredRequests.length === 0 ? (
-        <div className="text-gray-600 text-center">No visitation request</div>
-      ) : (
-        filteredRequests.map((request) => (
-          <Card key={request.id} request={request} setVisitationRequests={setVisitationRequests} setShowModal={setShowModal} setSelectedRequest={setSelectedRequest} />
-        ))
-      )}
+      {/* Render filtered requests */}
+      {filteredRequests.map((request) => (
+        <Card key={request.id} request={request} setVisitationRequests={setVisitationRequests} setShowModal={setShowModal} setSelectedRequest={setSelectedRequest} />
+      ))}
       {showModal && <Modal request={selectedRequest} setShowModal={setShowModal} />}
     </div>
   );
@@ -88,8 +90,7 @@ const Card = ({ request, setVisitationRequests, setShowModal, setSelectedRequest
   const handleDecline = async () => {
     try {
       await axios.patch(`http://ezapi.issl.ng:3333/visitationrequest?id=eq.${request.id}`, {
-        status: "Declined",
-        statusbystaffid: "Denied Visitation"
+        status: "Declined"
       });
       setVisitationRequests(prevRequests => prevRequests.filter(req => req.id !== request.id));
       toast.error("User request declined");
@@ -127,16 +128,16 @@ const Card = ({ request, setVisitationRequests, setShowModal, setSelectedRequest
             <div className="text-gray-700">{request.hostemailaddress}</div>
           </div>
         </div>
-        <div className="flex flex-col">
-          <button className="bg-green-500 hover:bg-green-600 text-white font-semibold px-8 py-2 mb-2 rounded w-full" onClick={handleApprove}>
+        <div className="flex">
+        <button className="bg-black hover:bg-black text-white font-semibold px-8 py-2 mb-2 rounded w-full">
+        <BsFillPersonLinesFill />
+          </button>
+          <button className='flex items-center justify-center px-4 py-2 border border-yellow-500 bg-white-400 text-yellow-500 rounded-md mb-2 w-full' onClick={handleReschedule}> <FaClock /></button>
+          <button className="bg-green-500 hover:bg-green-600 text-white font-semibold px-8 py-2 mb-2 rounded w-fit" onClick={handleApprove}>
             Approve
           </button>
-          <button className="bg-red-500 hover:bg-red-600 text-white font-semibold px-8 py-2 mb-2 rounded w-full" onClick={handleDecline}>
+          <button className="bg-red-500 hover:bg-red-600 text-white font-semibold px-8 py-2 mb-2 rounded w-fit" onClick={handleDecline}>
             Decline
-          </button>
-          <button className='flex items-center justify-center px-4 py-2 border border-yellow-500 bg-white-400 text-yellow-500 rounded-md mb-2 w-full' onClick={handleReschedule}> Reschedule</button>
-          <button className="bg-black hover:bg-black text-white font-semibold px-8 py-2 mb-2 rounded w-full">
-            Refer
           </button>
         </div>
       </div>
@@ -150,10 +151,12 @@ const Modal = ({ request, setShowModal }) => {
 
   const handleTimeChange = (time) => {
     setSelectedTime(time);
+    console.log(selectedTime);
   };
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
+   
   };
 
   const handleCloseModal = () => {
@@ -163,6 +166,7 @@ const Modal = ({ request, setShowModal }) => {
   const handleReschedule = async () => {
     try {
       const isoDateString = selectedDate.toString;
+      // console.log(isoDateString.toString);
   
       await axios.patch(`http://ezapi.issl.ng:3333/visitationrequest?id=eq.${request.id}`, {
         hostofficeextensiom: selectedTime,
@@ -170,14 +174,13 @@ const Modal = ({ request, setShowModal }) => {
         status: 'Rescheduled',
         statusbystaffid: "Rescheduled Visitation"
       });
-
       toast.success('User Rescheduled successfully');
       handleCloseModal();
-
     } catch (error) {
       console.log("Error Rescheduling:", error);
     }
   };
+
 
   return (
     <div className="fixed z-10 inset-0 overflow-y-auto">
@@ -199,6 +202,7 @@ const Modal = ({ request, setShowModal }) => {
                 <div className="mt-2">
                   <DatePickerExample onChange={handleDateChange} />
                   <TimePicker onChange={handleTimeChange} label="Select a Time"/>
+                  {/* <PatchRequestAtTime time={selectedTime} request={request.id} /> */}
                   <button 
                     onClick={handleReschedule} 
                     type="button" 
@@ -217,6 +221,7 @@ const Modal = ({ request, setShowModal }) => {
   );
 };
 
+
 const RescheduledVisitation = () => {
   const [rescheduledVisits, setRescheduledVisits] = useState([]);
 
@@ -234,6 +239,53 @@ const RescheduledVisitation = () => {
 
     fetchRescheduledVisits();
   }, []);
+
+  // const PatchRequestAtTime = ({ time, request }) => {
+  //   const [status, setStatus] = useState('');
+  
+  //   useEffect(() => {
+  //     // Function to send a PATCH request at a specified time
+  //     const sendPatchRequestAtTime = (time, request) => {
+  //       // Calculate the time difference between current time and the specified time
+  //       const timeDifference = time - new Date().getTime();
+  
+  //       // If the time difference is negative, it means the specified time has already passed
+  //       if (timeDifference <= 0) {
+  //         console.error('Specified time has already passed');
+  //         return;
+  //       }
+  
+  //       // Set a timeout to execute the PATCH request after the specified time
+  //       setTimeout(async () => {
+  //         try {
+  //           // Make the PATCH request
+  //           const response = await axios.patch(`http://ezapi.issl.ng:3333/visitationrequest?id=eq.${request.id}`, {
+  //             status: "Pending",
+  //             statusbystaffid: "Awaiting Check In"
+  //           });
+  //           console.log('Patch Successful'); // Log success message
+  //           setStatus(response.data.message); // Update status state with response message
+  //         } catch (error) {
+  //           console.error('Error sending PATCH request:', error);
+  //         }
+  //       }, timeDifference);
+  //     };
+  
+  //     // Log the current time before executing the PATCH request
+  //     const currentTime = new Date().getTime();
+  //     console.log('Current Time:', currentTime);
+  //     sendPatchRequestAtTime(time, request);
+  //   }, [time, request]);
+  
+  //   return (
+  //     <div>
+  //       {/* No button needed */}
+  //       {status && <div>Status: {status}</div>}
+  //     </div>
+  //   );
+  // };
+
+  
 
   return (
     <div className="flex justify-center">
