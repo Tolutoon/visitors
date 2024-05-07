@@ -21,7 +21,7 @@ const PatchRequestAtTime = () => {
     setTimeout(async () => {
       try {
         // Make the PATCH request
-        const response = await axios.patch(`http://ezapi.issl.ng:3333/visitationrequest?id=eq.306`, {
+        const response = await axios.patch(`http://ezapi.issl.ng:3333/visitationrequest?id=eq.308`, {
           status: "Pending",
           statusbystaffid: "Awaiting Check In"
         });
@@ -36,7 +36,7 @@ const PatchRequestAtTime = () => {
   // Function to handle sending PATCH request
   const handleSendPatchRequest = () => {
     const timeToExecute = new Date(); // Current date
-    timeToExecute.setHours(15, 12, 0, 0); // Set time to 11:21 AM
+    timeToExecute.setHours(16, 44, 0, 0); // Set time to 11:21 AM
     sendPatchRequestAtTime(timeToExecute.getTime()); // Pass the time in milliseconds
   };
 

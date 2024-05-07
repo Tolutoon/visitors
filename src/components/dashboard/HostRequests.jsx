@@ -6,11 +6,13 @@ import DatePickerExample from '../DatePickers';
 import TimePicker from '../TimePicker';
 import { FaClock } from "react-icons/fa";
 import { BsFillPersonLinesFill } from "react-icons/bs";
+import PatchRequestAtTime from '../PatchTime';
 
 const HostRequests = ({ hostsId }) => {
   return (
     <div className='py-8'>
       <FilteredCard hostId={hostsId} />
+      <PatchRequestAtTime/>
       <ToastContainer />
     </div>
   );
@@ -87,7 +89,8 @@ const Card = ({ request, setShowModal, setSelectedRequest, setShowReferModal, se
   const handleDecline = async () => {
     try {
       await axios.patch(`http://ezapi.issl.ng:3333/visitationrequest?id=eq.${request.id}`, {
-        status: "Declined"
+        status: "Declined",
+        statusbystaffid: "Declined Visitation"
       });
       setVisitationRequests(prevRequests => prevRequests.filter(req => req.id !== request.id));
       toast.error("User request declined");
@@ -163,10 +166,11 @@ const RescheduleModal = ({ request, setShowModal }) => {
 
   const handleReschedule = async () => {
     try {
-      const isoDateString = selectedDate.toString();
+      // Convert the selected date to ISO date string format
+      const isoDateString = new Date(selectedDate).toString();
       await axios.patch(`http://ezapi.issl.ng:3333/visitationrequest?id=eq.${request.id}`, {
         hostofficeextensiom: selectedTime,
-        plannedvisitdate: isoDateString,
+        plannedvisitdate: "2024-05-16",
         status: 'Rescheduled',
         statusbystaffid: "Rescheduled Visitation"
       });
@@ -176,6 +180,7 @@ const RescheduleModal = ({ request, setShowModal }) => {
       console.log("Error Rescheduling:", error);
     }
   };
+  
 
 
   return (
