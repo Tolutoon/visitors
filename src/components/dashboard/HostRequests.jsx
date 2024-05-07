@@ -4,27 +4,24 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import DatePickerExample from '../DatePickers';
 import TimePicker from '../TimePicker';
-import PatchRequestAtTime from '../PatchTime';
-import { FaClock } from "react-icons/fa6";
+import { FaClock } from "react-icons/fa";
 import { BsFillPersonLinesFill } from "react-icons/bs";
-
 
 const HostRequests = ({ hostsId }) => {
   return (
     <div className='py-8'>
       <FilteredCard hostId={hostsId} />
-      <PatchRequestAtTime/>
       <ToastContainer />
     </div>
   );
 };
 
-
 const FilteredCard = ({ hostId }) => {
   const [visitationRequests, setVisitationRequests] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [showReferModal, setShowReferModal] = useState(false);
   const [selectedRequest, setSelectedRequest] = useState(null);
-  const [showRescheduledVisits, setShowRescheduledVisits] = useState(false); // State to control visibility of rescheduled visits
+  const [showRescheduledVisits, setShowRescheduledVisits] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -43,29 +40,27 @@ const FilteredCard = ({ hostId }) => {
     request.staffid === hostId &&
     request.status !== "Approved" &&
     request.status !== "Declined" &&
-    request.status !== "Rescheduled" // Exclude requests with status "Rescheduled"
+    request.status !== "Rescheduled"
   );
 
   return (
     <div>
-      {/* Button to toggle visibility of rescheduled visits */}
       <div className="flex justify-center mb-4">
-        <button className="bg-black hover:bg-bl text-white font-semibold px-8 py-2 rounded" onClick={() => setShowRescheduledVisits(!showRescheduledVisits)}>
+        <button className="bg-black hover:bg-black text-white font-semibold px-8 py-2 rounded" onClick={() => setShowRescheduledVisits(!showRescheduledVisits)}>
           {showRescheduledVisits ? 'Hide Rescheduled Visits' : 'Show Rescheduled Visits'}
         </button>
       </div>
-      {/* Render rescheduled visits component */}
       {showRescheduledVisits && <RescheduledVisitation hostId={hostId} />}
-      {/* Render filtered requests */}
       {filteredRequests.map((request) => (
-        <Card key={request.id} request={request} setVisitationRequests={setVisitationRequests} setShowModal={setShowModal} setSelectedRequest={setSelectedRequest} />
+        <Card key={request.id} request={request} setShowModal={setShowModal} setSelectedRequest={setSelectedRequest} setShowReferModal={setShowReferModal} setVisitationRequests={setVisitationRequests} />
       ))}
-      {showModal && <Modal request={selectedRequest} setShowModal={setShowModal} />}
+      {showModal && <RescheduleModal request={selectedRequest} setShowModal={setShowModal} />}
+      {showReferModal && <ReferModal request={selectedRequest} setShowModal={setShowReferModal}/>}
     </div>
   );
 };
 
-const Card = ({ request, setVisitationRequests, setShowModal, setSelectedRequest }) => {
+const Card = ({ request, setShowModal, setSelectedRequest, setShowReferModal, setVisitationRequests }) => {
   
   const handleApprove = async () => {
     try {
@@ -74,12 +69,14 @@ const Card = ({ request, setVisitationRequests, setShowModal, setSelectedRequest
         statusbystaffid: "Awaiting Check-In"
       });
       toast.success('Request approved successfully');
-      
-      // Remove the approved request from the UI immediately
       setVisitationRequests(prevRequests => prevRequests.filter(req => req.id !== request.id));
     } catch (error) {
       console.error("Error approving request:", error);
     }
+  };
+
+  const handleRefer = () => {
+    setShowReferModal(true);
   };
 
   const handleReschedule = () => {
@@ -129,38 +126,35 @@ const Card = ({ request, setVisitationRequests, setShowModal, setSelectedRequest
           </div>
         </div>
         <div className="flex">
-        <button className="border border-black hover:bg-black hover:text-white text-black font-semibold px-8 py-2 mb-2 rounded w-full">
-  <BsFillPersonLinesFill />
-</button>
-
-          
-          <button className='flex items-center justify-center px-4 py-2 border border-yellow-500 bg-white-400 text-yellow-500 rounded-md mb-2 w-full' onClick={handleReschedule}> <FaClock /></button>
-          <button className="border border-red-500 hover:bg-red-500 hover:text-white text-red-500 font-semibold px-8 py-2 mb-2 rounded w-fit" onClick={handleDecline}>
-  Decline
-</button>
-          <button className="bg-green-500 hover:bg-green-600 text-white font-semibold px-8 py-2 mb-2 rounded w-fit" onClick={handleApprove}>
+          <button className="border border-black hover:bg-black hover:text-white text-black font-semibold px-4 py-2 mr-2 rounded w-full" onClick={handleRefer}>
+            <BsFillPersonLinesFill />
+          </button>
+          <button className='flex items-center justify-center px-4 py-2 border hover:text-white border-yellow-500 bg-white-400 text-yellow-500 hover:bg-yellow-500 rounded-md mr-2 w-full' onClick={handleReschedule}>
+            <FaClock />
+          </button>
+          <button className="border border-red-500 hover:bg-red-500 hover:text-white text-red-500 font-semibold px-4 py-2 mr-2 rounded w-fit" onClick={handleDecline}>
+            Decline
+          </button>
+          <button className="bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 mr-2 rounded w-fit" onClick={handleApprove}>
             Approve
           </button>
-
-
         </div>
       </div>
     </div>
   );
 };
 
-const Modal = ({ request, setShowModal }) => {
+
+const RescheduleModal = ({ request, setShowModal }) => {
   const [selectedTime, setSelectedTime] = useState('');
   const [selectedDate, setSelectedDate] = useState('');
 
   const handleTimeChange = (time) => {
     setSelectedTime(time);
-    console.log(selectedTime);
   };
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
-   
   };
 
   const handleCloseModal = () => {
@@ -169,9 +163,7 @@ const Modal = ({ request, setShowModal }) => {
 
   const handleReschedule = async () => {
     try {
-      const isoDateString = selectedDate.toString;
-      // console.log(isoDateString.toString);
-  
+      const isoDateString = selectedDate.toString();
       await axios.patch(`http://ezapi.issl.ng:3333/visitationrequest?id=eq.${request.id}`, {
         hostofficeextensiom: selectedTime,
         plannedvisitdate: isoDateString,
@@ -206,7 +198,6 @@ const Modal = ({ request, setShowModal }) => {
                 <div className="mt-2">
                   <DatePickerExample onChange={handleDateChange} />
                   <TimePicker onChange={handleTimeChange} label="Select a Time"/>
-                  {/* <PatchRequestAtTime time={selectedTime} request={request.id} /> */}
                   <button 
                     onClick={handleReschedule} 
                     type="button" 
@@ -226,6 +217,75 @@ const Modal = ({ request, setShowModal }) => {
 };
 
 
+const ReferModal = ({ setShowModal }) => {
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+
+  const [employees, setEmployees] = useState([]);
+  const [selectedOption, setSelectedOption] = useState('');
+
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      try {
+        const response = await axios.get('http://ezapi.issl.ng:3333/employee');
+        setEmployees(response.data);
+      } catch (error) {
+        console.error('Error fetching employees:', error);
+      }
+    };
+
+    fetchEmployees();
+  }, []);
+
+  const handleSelectChange = (event) => {
+    setSelectedOption(event.target.value);
+  };
+
+  const handleRefer = () => {
+    // Add your logic for referring here
+    console.log('Referring to:', selectedOption);
+  };
+
+  return (
+    <div className="fixed z-10 inset-0 overflow-y-auto">
+      <div className="flex items-end justify-center h-full pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+        <div className="fixed inset-0 transition-opacity" aria-hidden="true">
+          <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
+        </div>
+        <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+        <div className="relative inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-xs sm:w-full" style={{ height: '30vh' }}>
+          <button className="absolute top-4 right-4 text-gray-500 hover:text-gray-800" onClick={handleCloseModal}>
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+          <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+            <div className="sm:flex sm:items-start">
+              <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">Refer To:</h3>
+                <div className="mt-2">
+                  <select value={selectedOption} onChange={handleSelectChange} className="block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                    <option value="">Select an option</option>
+                    {employees.map((employee) => (
+                      <option key={employee.id} value={employee.name}>
+                        {employee.name}
+                      </option>
+                    ))}
+                  </select>
+                  <button onClick={handleRefer} className="mt-8 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-black focus:outline-none focus:ring-2 focus:ring-offset-2">
+                    Refer
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const RescheduledVisitation = ({ hostId }) => {
   const [rescheduledVisits, setRescheduledVisits] = useState([]);
 
@@ -233,7 +293,6 @@ const RescheduledVisitation = ({ hostId }) => {
     const fetchRescheduledVisits = async () => {
       try {
         const response = await axios.get("http://ezapi.issl.ng:3333/visitationrequest");
-        // Filter users with the status of "Rescheduled" and matching staff ID
         const filteredVisits = response.data.filter((visit) => visit.status === "Rescheduled" && visit.staffid === hostId);
         setRescheduledVisits(filteredVisits);
       } catch (error) {
