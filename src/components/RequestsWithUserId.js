@@ -6,8 +6,8 @@ import TabHostRequests from "./dashboard/Tabbar";
 const RequestsWithUserId = () => {
     let { userId } = useParams();
     
-    return <HostRequests hostsId={userId} />;
-    // return <TabHostRequests hostsId={userId} />;
+    // return <HostRequests hostsId={userId} />;
+    return <TabHostRequests hostsId={userId} />;
 
   }
 

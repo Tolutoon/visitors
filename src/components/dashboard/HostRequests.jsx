@@ -57,9 +57,9 @@ const FilteredCard = ({ hostId }) => {
         <Card key={request.id} request={request} setShowModal={setShowModal} setSelectedRequest={setSelectedRequest} setShowReferModal={setShowReferModal} setVisitationRequests={setVisitationRequests} />
       ))}
       {showModal && <RescheduleModal request={selectedRequest} setShowModal={setShowModal} />}
-      {showReferModal && filteredRequests.map((request) => (
-  <ReferModal key={request.id} request={request} setShowModal={setShowReferModal} currentStaffId={hostId} />
-))}
+      {showReferModal && (    
+         <ReferModal key={selectedRequest.id} request={selectedRequest} setShowModal={setShowReferModal} currentStaffId={hostId} setShowReferModal={setShowReferModal}/>
+      )}
     </div>
   );
 };
@@ -79,9 +79,13 @@ const Card = ({ request, setShowModal, setSelectedRequest, setShowReferModal, se
     }
   };
 
-  const handleRefer = () => {
+  const handleRefer = (request) => {
     setShowReferModal(true);
+    console.log("Selected Request ID:", request.id);
+    setSelectedRequest(request); // Update selectedRequest with the request corresponding to the clicked card
+
   };
+  
 
   const handleReschedule = () => {
     setSelectedRequest(request);
@@ -131,8 +135,8 @@ const Card = ({ request, setShowModal, setSelectedRequest, setShowReferModal, se
           </div>
         </div>
         <div className="flex">
-          <button className="border border-black hover:bg-black hover:text-white text-black font-semibold px-4 py-2 mr-2 rounded w-full" onClick={handleRefer}>
-            <BsFillPersonLinesFill />
+          <button className="border border-black hover:bg-black hover:text-white text-black font-semibold px-4 py-2 mr-2 rounded w-full" >
+            <BsFillPersonLinesFill onClick={() => handleRefer(request)}/>
           </button>
           <button className='flex items-center justify-center px-4 py-2 border hover:text-white border-yellow-500 bg-white-400 text-yellow-500 hover:bg-yellow-500 rounded-md mr-2 w-full' onClick={handleReschedule}>
             <FaClock />
@@ -150,6 +154,7 @@ const Card = ({ request, setShowModal, setSelectedRequest, setShowReferModal, se
 };
 
 
+
 const RescheduleModal = ({ request, setShowModal }) => {
   const [selectedTime, setSelectedTime] = useState('');
   const [selectedDate, setSelectedDate] = useState('');
@@ -164,6 +169,7 @@ const RescheduleModal = ({ request, setShowModal }) => {
 
   const handleCloseModal = () => {
     setShowModal(false);
+    
   };
 
   const handleReschedule = async () => {
@@ -224,9 +230,10 @@ const RescheduleModal = ({ request, setShowModal }) => {
 };
 
 
-const ReferModal = ({ request, setShowModal, currentStaffId }) => {
+const ReferModal = ({ request, setShowModal, currentStaffId, setShowReferModal }) => {
   const handleCloseModal = () => {
     setShowModal(false);
+    setShowReferModal(false); 
   };
 
   const [employees, setEmployees] = useState([]);
@@ -249,36 +256,39 @@ const ReferModal = ({ request, setShowModal, currentStaffId }) => {
     setSelectedOption(event.target.value);
   };
 
-  const handleRefer = async () => {
-    // Check if a name is selected
-    if (selectedOption) {
-      // Find the selected employee
-      const selectedEmployee = employees.find((employee) => employee.name === selectedOption);
-      
-      // Check if the employee object is found
-      if (selectedEmployee) {
-        try {
-          // Make the PATCH request to update the visitor
-          console.log(request.id);
-          await axios.patch(`http://ezapi.issl.ng:3333/visitationrequest?id=eq.${request.id}`, {
-            // Update the staffid and hostname according to the selected employee
-            staffid: selectedEmployee.staffid,
-            hostname: selectedOption
-          });
-    
-          // Log a success message
-          console.log('PATCH request sent successfully to update visitor:', request.id);
-        } catch (error) {
-          // Log an error message if the PATCH request fails
-          console.error('Error sending PATCH request to update visitor:', error);
-        }
-      } else {
-        console.error('Selected employee not found');
+const handleRefer = async () => {
+  // Check if a name is selected
+  if (selectedOption) {
+    // Find the selected employee
+    const selectedEmployee = employees.find((employee) => employee.name === selectedOption);
+    // Check if the employee object is found
+    if (selectedEmployee) {
+      try {
+        // Make the PATCH request to update the visitor
+        await axios.patch(`http://ezapi.issl.ng:3333/visitationrequest?id=eq.${request.id}`, {
+          // Update the staffid and hostname according to the selected employee
+          staffid: selectedEmployee.staffid,
+          hostname: selectedOption
+        });
+
+        // Log a success message
+        console.log('PATCH request sent successfully to update visitor:', request.id);
+      } catch (error) {
+        // Log an error message if the PATCH request fails
+        console.error('Error sending PATCH request to update visitor:', error);
       }
     } else {
-      console.error('No employee name selected');
+      console.error('Selected employee not found');
     }
-  };
+  } else {
+    console.error('No employee name selected');
+  }
+  
+  // Close the modal box after referring
+  handleCloseModal();
+};
+
+
   
   
   

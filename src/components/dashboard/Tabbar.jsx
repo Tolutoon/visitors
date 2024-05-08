@@ -14,9 +14,9 @@ const TabHostRequests = ({ hostsId }) => {
     return (
         <div className='py-8'>
           <Tabs>
-          <TabList className="flex justify-center bg-gray-100 p-4 rounded-t-xl ">
-              <Tab className="text-gray-700 px-4 py-2 mr-2 rounded cursor-pointer hover:bg-gray-300">Filtered Requests</Tab>
-              <Tab className="text-gray-700 px-4 py-2 mr-2 rounded cursor-pointer hover:bg-gray-300">Rescheduled Visits</Tab>
+          <TabList className="flex justify-center bg-gray-100 p-4 rounded-t-xl mb-4">
+              <Tab className="text-gray-700 px-4 py-2 mr-2 rounded cursor-pointer hover:bg-gray-300">New</Tab>
+              <Tab className="text-gray-700 px-4 py-2 mr-2 rounded cursor-pointer hover:bg-gray-300">Rescheduled</Tab>
               <Tab className="text-gray-700 px-4 py-2 mr-2 rounded cursor-pointer hover:bg-gray-300">Closed</Tab>
             </TabList>
             <TabPanel>
@@ -73,95 +73,97 @@ const FilteredCard = ({ hostId }) => {
           <Card key={request.id} request={request} setShowModal={setShowModal} setSelectedRequest={setSelectedRequest} setShowReferModal={setShowReferModal} setVisitationRequests={setVisitationRequests} />
         ))}
         {showModal && <RescheduleModal request={selectedRequest} setShowModal={setShowModal} />}
-        {showReferModal && <ReferModal request={selectedRequest} setShowModal={setShowReferModal} currentStaffId={hostId} visitorId="309"/>}
+        {showReferModal && filteredRequests.map((request) => (
+  <ReferModal key={request.id} request={filteredRequests.find((request) => request.id === selectedRequest.id)} setShowReferModal={setShowReferModal} currentStaffId={hostId} />
+))}
       </div>
     );
   };
 
-  const Card = ({ request, setShowModal, setSelectedRequest, setShowReferModal, setVisitationRequests }) => {
-  
+const Card = ({ request, setShowModal, setSelectedRequest, setShowReferModal, setVisitationRequests }) => {
     const handleApprove = async () => {
-      try {
-        await axios.patch(`http://ezapi.issl.ng:3333/visitationrequest?id=eq.${request.id}`, {
-          status: "Approved",
-          statusbystaffid: "Awaiting Check-In"
-        });
-        toast.success('Request approved successfully');
-        setVisitationRequests(prevRequests => prevRequests.filter(req => req.id !== request.id));
-      } catch (error) {
-        console.error("Error approving request:", error);
-      }
+        try {
+            await axios.patch(`http://ezapi.issl.ng:3333/visitationrequest?id=eq.${request.id}`, {
+                status: "Approved",
+                statusbystaffid: "Awaiting Check-In"
+            });
+            toast.success('Request approved successfully');
+            setVisitationRequests(prevRequests => prevRequests.filter(req => req.id !== request.id));
+        } catch (error) {
+            console.error("Error approving request:", error);
+        }
     };
-  
+
     const handleRefer = () => {
-      setShowReferModal(true);
+        setSelectedRequest(request); // Pass the selected request to the modal
+        setShowReferModal(true);
     };
-  
+
     const handleReschedule = () => {
-      setSelectedRequest(request);
-      setShowModal(true);
+        setSelectedRequest(request);
+        setShowModal(true);
     };
-  
+
     const handleDecline = async () => {
-      try {
-        await axios.patch(`http://ezapi.issl.ng:3333/visitationrequest?id=eq.${request.id}`, {
-          status: "Declined",
-          statusbystaffid: "Declined Visitation"
-        });
-        setVisitationRequests(prevRequests => prevRequests.filter(req => req.id !== request.id));
-        toast.error("User request declined");
-  
-      } catch (error) {
-        console.log("Error declining request:", error);
-      }
+        try {
+            await axios.patch(`http://ezapi.issl.ng:3333/visitationrequest?id=eq.${request.id}`, {
+                status: "Declined",
+                statusbystaffid: "Declined Visitation"
+            });
+            setVisitationRequests(prevRequests => prevRequests.filter(req => req.id !== request.id));
+            toast.error("User request declined");
+        } catch (error) {
+            console.log("Error declining request:", error);
+        }
     };
-  
+
     return (
-      <div className="max-w-sm mx-auto bg-white rounded-xl shadow-md overflow-hidden mb-4">
-        <div className="p-12">
-          <div className="text-xl font-medium text-gray-800 mb-4">Visitation Request</div>
-          <div className="justify-between items-center mb-2">
-            <div className='mb-4'>
-              <div className="font-semibold text-gray-600">Approval Required</div>
-              <div className="text-gray-700">You have a visitor that needs your approval to get in</div>
+        <div className="max-w-sm mx-auto bg-white rounded-xl shadow-md overflow-hidden mb-4">
+            <div className="p-12">
+                <div className="text-xl font-medium text-gray-800 mb-4">Visitation Request</div>
+                <div className="justify-between items-center mb-2">
+                    <div className='mb-4'>
+                        <div className="font-semibold text-gray-600">Approval Required</div>
+                        <div className="text-gray-700">You have a visitor that needs your approval to get in</div>
+                    </div>
+                    <div>
+                        <div className="font-semibold text-gray-600">Full Name</div>
+                        <div className="text-gray-700">{request.visitorname}</div>
+                    </div>
+                    <div>
+                        <div className="font-semibold text-gray-600">Visitor Type</div>
+                        <div className="text-gray-700">Visitor</div>
+                    </div>
+                </div>
+                <div className="justify-between items-center mb-4">
+                    <div>
+                        <div className="font-semibold text-gray-600">Purpose for Visit</div>
+                        <div className="text-gray-700">Official</div>
+                    </div>
+                    <div>
+                        <div className="font-semibold text-gray-600">Private Note</div>
+                        <div className="text-gray-700">{request.hostemailaddress}</div>
+                    </div>
+                </div>
+                <div className="flex">
+                    <button className="border border-black hover:bg-black hover:text-white text-black font-semibold px-4 py-2 mr-2 rounded w-full" onClick={handleRefer}>
+                        <BsFillPersonLinesFill />
+                    </button>
+                    <button className='flex items-center justify-center px-4 py-2 border hover:text-white border-yellow-500 bg-white-400 text-yellow-500 hover:bg-yellow-500 rounded-md mr-2 w-full' onClick={handleReschedule}>
+                        <FaClock />
+                    </button>
+                    <button className="border border-red-500 hover:bg-red-500 hover:text-white text-red-500 font-semibold px-4 py-2 mr-2 rounded w-fit" onClick={handleDecline}>
+                        Decline
+                    </button>
+                    <button className="bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 mr-2 rounded w-fit" onClick={handleApprove}>
+                        Approve
+                    </button>
+                </div>
             </div>
-            <div>
-              <div className="font-semibold text-gray-600">Full Name</div>
-              <div className="text-gray-700">{request.visitorname}</div>
-            </div>
-            <div>
-              <div className="font-semibold text-gray-600">Visitor Type</div>
-              <div className="text-gray-700">Visitor</div>
-            </div>
-          </div>
-          <div className="justify-between items-center mb-4">
-            <div>
-              <div className="font-semibold text-gray-600">Purpose for Visit</div>
-              <div className="text-gray-700">Official</div>
-            </div>
-            <div>
-              <div className="font-semibold text-gray-600">Private Note</div>
-              <div className="text-gray-700">{request.hostemailaddress}</div>
-            </div>
-          </div>
-          <div className="flex">
-            <button className="border border-black hover:bg-black hover:text-white text-black font-semibold px-4 py-2 mr-2 rounded w-full" onClick={handleRefer}>
-              <BsFillPersonLinesFill />
-            </button>
-            <button className='flex items-center justify-center px-4 py-2 border hover:text-white border-yellow-500 bg-white-400 text-yellow-500 hover:bg-yellow-500 rounded-md mr-2 w-full' onClick={handleReschedule}>
-              <FaClock />
-            </button>
-            <button className="border border-red-500 hover:bg-red-500 hover:text-white text-red-500 font-semibold px-4 py-2 mr-2 rounded w-fit" onClick={handleDecline}>
-              Decline
-            </button>
-            <button className="bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 mr-2 rounded w-fit" onClick={handleApprove}>
-              Approve
-            </button>
-          </div>
         </div>
-      </div>
     );
-  };
+};
+
 
   const RescheduleModal = ({ request, setShowModal }) => {
     const [selectedTime, setSelectedTime] = useState('');
@@ -237,9 +239,9 @@ const FilteredCard = ({ hostId }) => {
   };
   
   
-  const ReferModal = ({ request, setShowModal, currentStaffId }) => {
+  const ReferModal = ({ request, setShowReferModal, currentStaffId }) => {
     const handleCloseModal = () => {
-      setShowModal(false);
+      setShowReferModal(false);
     };
   
     const [employees, setEmployees] = useState([]);
@@ -280,6 +282,7 @@ const FilteredCard = ({ hostId }) => {
       
             // Log a success message
             console.log('PATCH request sent successfully to update visitor:', request.id);
+            toast.success("Referred Successfully");
           } catch (error) {
             // Log an error message if the PATCH request fails
             console.error('Error sending PATCH request to update visitor:', error);
@@ -290,6 +293,7 @@ const FilteredCard = ({ hostId }) => {
       } else {
         console.error('No employee name selected');
       }
+      handleCloseModal();
     };
     
     
@@ -315,7 +319,7 @@ const FilteredCard = ({ hostId }) => {
                   <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">Refer To:</h3>
                   <div className="mt-2">
                     <select value={selectedOption} onChange={handleSelectChange} className="block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
-                      <option value="">Select an option</option>
+                      <option value="">Select a host</option>
                       {employees
                         .filter((employee) => employee.staffid !== currentStaffId)
                         .map((employee) => (
