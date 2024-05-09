@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 import { useMask } from "@react-input/mask";
 import { IoCheckmarkDoneCircleSharp } from "react-icons/io5";
-import { ImCheckboxChecked } from "react-icons/im";
+// import { ImCheckboxChecked } from "react-icons/im";
 import { ToastContainer, toast } from "react-toastify";
 
 // Modal component
@@ -11,26 +12,31 @@ const Modal = ({ isOpen, onClose }) => {
     <>
       {isOpen && (
         <div className="fixed z-50 inset-0 overflow-y-auto">
-  <div className="flex items-center justify-center h-fit my-10">
-    <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
-    <div className="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-md sm:w-full mx-4">
-      <div className="flex items-center justify-center pt-4">
-        <ImCheckboxChecked className="text-8xl text-green-500" />
-      </div>
-      <div className="bg-white p-4 flex flex-col items-center justify-center">
-        <h2 className="font-bold text-xl mb-4">Request submitted successfully</h2>
-        <p className="mb-8 text-center">Your request has been submitted. Please wait while your request is being processed.</p>
-        <button onClick={onClose} className="bg-black text-white px-4 py-2 rounded-md">Return Home</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-
+          <div className="flex items-center justify-center h-screen my-10">
+            <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+            <div className="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-md sm:w-full mx-4">
+              <div className="flex items-center justify-center pt-4">
+                <IoCheckmarkDoneCircleSharp className="text-8xl text-green-500" />
+              </div>
+              <div className="bg-white p-4 flex flex-col items-center justify-center">
+                <h2 className="font-bold text-xl mb-4">Request submitted successfully</h2>
+                <p className="mb-8 text-center">Your request has been submitted. Please wait while your request is being processed.</p>
+                <Link
+                  to="/"
+                  className="block text-center bg-black text-white px-8 py-2 rounded-md hover:bg-opacity-80"
+                  onClick={onClose}
+                >
+                  Return Home
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
     </>
   );
 };
+
 
 const FormFloatingBasicExample = () => {
   const [formData, setFormData] = useState({

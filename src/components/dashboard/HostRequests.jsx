@@ -7,10 +7,12 @@ import TimePicker from '../TimePicker';
 import { FaClock } from "react-icons/fa";
 import { BsFillPersonLinesFill } from "react-icons/bs";
 import PatchRequestAtTime from '../PatchTime';
+import ProfileHeader from '../ProfileHeader';
 
 const HostRequests = ({ hostsId }) => {
   return (
     <div className='py-8'>
+      <ProfileHeader />
       <FilteredCard hostId={hostsId} />
       <PatchRequestAtTime/>
       <ToastContainer />
