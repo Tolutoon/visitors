@@ -1,5 +1,4 @@
 import { Routes, Route } from "react-router-dom";
-// import HostRequests from './components/dashboard/HostRequests';
 import RequestsWithUserId from "./components/RequestsWithUserId";
 import Visitors from './components/dashboard/Visitors';
 import FormFloatingBasicExample from "./components/Form/VisitorsForm";
@@ -8,6 +7,7 @@ import LogRequestId from "./LogRequest";
 import Homepage from "./components/dashboard/HomePage";
 import Keycloak from "keycloak-js";
 import { useState, useEffect } from "react";
+import SignIn from "./components/dashboard/SignIn";
 
 const keycloak = new Keycloak({
   url: 'https://keycloak.issl.ng',
@@ -41,20 +41,26 @@ function App() {
         });
       } else {
         console.log('User is not authenticated');
+        setAuthenticated(false); // Update authenticated state
       }
     });
   }, []);
 
   return (
-  <Routes>
-    <Route path='/log' element={<Visitors/>}/>
-    <Route path="/form" element={<FormFloatingBasicExample/>}/>
-    <Route path='/requests/:userId' element={<RequestsWithUserId />} />
-    <Route path="/log/:userId" element={<LogRequestId />}/>
-    <Route path="/" element={<Homepage/>}/>
-    {/* <Route path='/requests' element={<HostRequests hostsId={'1234'}/>}/> */}
-    {/* <Route path="/host" element={<Hosts hostId={'1234'} visitorId={'87654321'}/>}/> */}
-  </Routes>
+    <Routes>
+      {/* Conditionally render the routes based on authenticated state */}
+      {authenticated ? (
+        <>
+          <Route path='/log' element={<Visitors/>}/>
+          {/* Pass the username from userProfile as a prop to RequestsWithUserId */}
+          <Route path='/requests/:userId' element={<RequestsWithUserId userProfile={userProfile ? userProfile.username : null} />} />
+          <Route path="/log/:userId" element={<LogRequestId />}/>
+        </>
+      ) : null}
+      <Route path="/form" element={<FormFloatingBasicExample/>}/>
+      <Route path="/home" element={<Homepage/>}/>
+      <Route path="/" element={<SignIn/>}/>
+    </Routes>
   );
 }
 

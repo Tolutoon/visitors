@@ -11,10 +11,10 @@ import { BsFillPersonLinesFill } from "react-icons/bs";
 import PatchRequestAtTime from '../PatchTime';
 import ProfileHeader from '../ProfileHeader';
 
-const TabHostRequests = ({ hostsId }) => {
+const TabHostRequests = ({ hostsId, userProfile }) => {
     return (
         <div className='py-8'>
-              <ProfileHeader />
+              <ProfileHeader username={userProfile}/>
           <Tabs>
           <TabList className="flex justify-center bg-gray-100 p-4 rounded-t-xl mb-4">
               <Tab className="text-gray-700 px-4 py-2 mr-2 rounded cursor-pointer hover:bg-gray-300">New</Tab>

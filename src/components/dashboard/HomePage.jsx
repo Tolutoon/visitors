@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Typewriter from "typewriter-effect";
 import Keycloak from "keycloak-js";
 import { Link, useNavigate } from "react-router-dom";
@@ -12,13 +12,30 @@ const keycloak = new Keycloak({
 
 const Homepage = () => {
   const navigate = useNavigate();
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [userProfile, setUserProfile] = useState(null); // State to store user profile
 
   useEffect(() => {
     keycloak.init({ onLoad: 'check-sso' }).then((authenticated) => {
       if (authenticated) {
         console.log('User is authenticated');
-        // Redirect to /log if user is authenticated
-        navigate('/log');
+
+        // Load user profile after authentication
+        keycloak.loadUserProfile().then((profile) => {
+          console.log('User Profile:', profile);
+          setUserProfile(profile);
+          
+          // Check if the user is an admin
+          const realmRoles = keycloak.realmAccess.roles;
+          if (realmRoles && realmRoles.includes('admin')) {
+            setIsAdmin(true);
+            navigate('/log'); // Redirect to /log if the user is an admin
+          } else {
+            navigate(`/requests/${profile.attributes.staffid}`); // Redirect to another page with the staffId
+          }
+        }).catch((error) => {
+          console.error('Error loading user profile:', error);
+        });
       } else {
         console.log('User is not authenticated');
       }

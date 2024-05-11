@@ -30,27 +30,6 @@ const DatePickerExample = () => {
 };
 
 
-// const PopUpButton = ({ request }) => {
-//   const [showPopUp, setShowPopUp] = useState(false);
-
-//   return (
-//     <div className="relative inline-block">
-//       {showPopUp && (
-//         <div className="absolute mt-8 w-24 bg-white border border-gray-200 rounded-md shadow-lg z-10">
-//           <button onClick={() => setShowPopUp(false)} className="px-4 py-1 rounded-md text-gray-700 hover:bg-gray-300 focus:outline-none">
-//             View Log
-//           </button>
-//         </div>
-//       )}
-//       <Link to={`/log/${request.id}`}>
-//         <button className="ml-2" onClick={() => setShowPopUp(!showPopUp)}>
-//           <HiOutlineDotsHorizontal className="cursor-pointer" />
-//         </button>
-//       </Link>
-//     </div>
-//   );
-// };
-
 
 
 const Visitors = () => {
@@ -201,7 +180,7 @@ const Visitors = () => {
           >
             {request.statusbystaffid === 'Signed In' ? 'Check out' : 'Check in'}
           </button>
-          <PopUpButton requestId={request.id} /> {/* Pass request as a prop to PopUpButton */}
+          <PopUpButton requestId={request.id} /> 
         </div>
       ))}
   </div>
