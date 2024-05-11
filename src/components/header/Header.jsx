@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Header = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -94,9 +96,11 @@ const Header = () => {
       .then((response) => {
         console.log("Response:", response.data);
         closeModal(); // Close modal after successful submission
+        toast.success("Request submitted successfully!");
       })
       .catch((error) => {
         console.error("Error:", error);
+        toast.error("Failed to submit request. Please try again later.");
       });
 
       setFormData({
@@ -300,6 +304,8 @@ const Header = () => {
         </div>
       )}
       {/* End of Modal */}
+        {/* Toast Container */}
+        <ToastContainer />
     </div>
   );
 };

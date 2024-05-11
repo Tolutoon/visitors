@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import RequestsWithUserId from "./utils/RequestsWithUserId";
 import Visitors from './views/Visitors';
 import Form from "./views/VisitorsForm";
@@ -15,8 +15,8 @@ const keycloak = new Keycloak({
 });
 
 function App() {
-  // const [isAdmin, setIsAdmin] = useState(false);
   const [authenticated, setAuthenticated] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [userProfile, setUserProfile] = useState(null); // State to store user profile
 
   useEffect(() => {
@@ -25,16 +25,14 @@ function App() {
         console.log('User is authenticated');
         setAuthenticated(true);
 
-        // const realmRoles = keycloak.realmAccess.roles;
-        // console.log(realmRoles);
-        // if (realmRoles && realmRoles.includes('admin')) {
-        //   setIsAdmin(true);
-        // }
-
         // Load user profile after authentication
         keycloak.loadUserProfile().then((profile) => {
-          // console.log('User Profile:', profile);
           setUserProfile(profile);
+          // Check if the user has the admin role
+          const realmRoles = keycloak.realmAccess.roles;
+          if (realmRoles && realmRoles.includes('admin')) {
+            setIsAdmin(true);
+          }
         }).catch((error) => {
           console.error('Error loading user profile:', error);
         });
@@ -47,10 +45,14 @@ function App() {
 
   return (
     <Routes>
-      {/* Conditionally render the routes based on authenticated state */}
+      {/* Conditionally render the routes based on authenticated and admin state */}
       {authenticated ? (
         <>
-          <Route path='/log' element={<Visitors/>}/>
+          {isAdmin ? (
+            <Route path='/log' element={<Visitors/>}/>
+          ) : (
+            <Route path='/log' element={<Navigate to="/home" />} />
+          )}
           {/* Pass the username from userProfile as a prop to RequestsWithUserId */}
           <Route path='/requests/:userId' element={<RequestsWithUserId userProfile={userProfile ? userProfile.username : null} />} />
           <Route path="/log/:userId" element={<LogRequestId />}/>
