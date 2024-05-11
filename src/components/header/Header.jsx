@@ -168,7 +168,7 @@ const Header = () => {
                 <form onSubmit={handleSubmit}>
                 <div className="mb-4 relative">
    <input
-    className="border border-gray-300 rounded-md py-3 px-4 w-full placeholder-gray-500"
+    className="border border-gray-300 rounded-md py-4 px-4 w-full placeholder-gray-500"
     type="text"
     id="visitorname"
     name="visitorname"
@@ -189,7 +189,7 @@ const Header = () => {
 
 <div className="mb-4 relative">
   <input
-    className="border border-gray-300 rounded-md py-3 px-4 w-full placeholder-gray-500"
+    className="border border-gray-300 rounded-md py-4 px-4 w-full placeholder-gray-500"
     type="text"
     id="visitorphone"
     name="visitorphone"
@@ -209,7 +209,7 @@ const Header = () => {
 
 <div className="mb-4 relative">
   <input
-    className="border border-gray-300 rounded-md py-3 px-4 w-full placeholder-gray-500"
+    className="border border-gray-300 rounded-md py-4 px-4 w-full placeholder-gray-500"
     type="email"
     id="visitoremail"
     name="visitoremail"
@@ -229,7 +229,7 @@ const Header = () => {
 
 <div className="mb-4 relative">
   <input
-    className="border border-gray-300 rounded-md py-3 px-4 w-full placeholder-gray-500"
+    className="border border-gray-300 rounded-md py-4 px-4 w-full placeholder-gray-500"
     type="text"
     id="hostname"
     name="hostname"
@@ -249,7 +249,7 @@ const Header = () => {
 
 <div className="mb-4 relative">
   <input
-    className="border border-gray-300 rounded-md py-3 px-4 w-full placeholder-gray-500"
+    className="border border-gray-300 rounded-md py-4 px-4 w-full placeholder-gray-500"
     type="tel"
     id="hostphoneno"
     name="hostphoneno"

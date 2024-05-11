@@ -86,25 +86,26 @@ const Visitors = () => {
   return (
     <div className="container mx-auto px-8">
       <Header/>
-      <div className="flex flex-col md:flex-row max-w-6xl mx-auto justify-between items-center py-4">
-        <div className="w-full md:w-auto flex items-center">
-          <div className="py-4 border border-gray-300 rounded-md w-min px-2 mr-4">
-            <select id="visitorTypeFilter" value={selectedVisitorType} onChange={handleVisitorTypeChange}>
-              <option value="">All Visitors</option>
-              <option value="Visitor">Visitor</option>
-              <option value="Employee">Employee</option>
-            </select>
-          </div>
-          <div className="py-4 border border-gray-300 rounded-md w-min px-2 mr-2">
-            <select id="visitorTypeFilter" value={selectedVisitorType} onChange={handleVisitorTypeChange}>
-              <option value="">All</option>
-              <option value="Visitor">Visitor</option>
-              <option value="Employee">Employee</option>
-            </select>
-          </div>
-          <DatePickerExample/>
-        </div>
-      </div>
+      <div className="flex flex-col md:flex-row max-w-6xl mx-auto justify-between items-center py-4 md:justify-end">
+  <div className="w-full md:w-auto flex items-center md:justify-end">
+    <div className="py-4 border border-gray-300 rounded-md w-min px-2 md:mr-4">
+      <select id="visitorTypeFilter" value={selectedVisitorType} onChange={handleVisitorTypeChange}>
+        <option value="">All Visitors</option>
+        <option value="Visitor">Visitor</option>
+        <option value="Employee">Employee</option>
+      </select>
+    </div>
+    <div className="py-4 border border-gray-300 rounded-md w-min px-2 mr-2">
+      <select id="visitorTypeFilter" value={selectedVisitorType} onChange={handleVisitorTypeChange}>
+        <option value="">All</option>
+        <option value="Visitor">Visitor</option>
+        <option value="Employee">Employee</option>
+      </select>
+    </div>
+    <DatePickerExample/>
+  </div>
+</div>
+
       <div className="grid grid-cols-1 md:grid-cols-9 gap-2 border-b border-gray-300 py-8 ">
         <div className="col-span-1 text-center md:col-span-1">Visitor's name</div>
         <div className="col-span-1 text-center md:col-span-1">Visitor's Type</div>

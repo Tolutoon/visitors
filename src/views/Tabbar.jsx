@@ -12,28 +12,49 @@ import PatchRequestAtTime from '../components/common/PatchTime';
 import ProfileHeader from '../components/header/ProfileHeader';
 
 const TabHostRequests = ({ hostsId, userProfile }) => {
+    const [newRequests, setNewRequests] = useState([]);
+
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const visitationResponse = await axios.get("http://ezapi.issl.ng:3333/visitationrequest");
+          const filteredNewRequests = visitationResponse.data.filter((request) =>
+            request.staffid === hostsId &&
+            request.status !== "Approved" &&
+            request.status !== "Declined" &&
+            request.status !== "Rescheduled"
+          );
+          setNewRequests(filteredNewRequests);
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+      };
+  
+      fetchData();
+    }, [hostsId]);
+
     return (
         <div className='py-8'>
-              <ProfileHeader username={userProfile}/>
-          <Tabs>
-          <TabList className="flex justify-center bg-gray-100 p-4 rounded-t-xl mb-4">
-              <Tab className="text-gray-700 px-4 py-2 mr-2 rounded cursor-pointer hover:bg-gray-300">New</Tab>
-              <Tab className="text-gray-700 px-4 py-2 mr-2 rounded cursor-pointer hover:bg-gray-300">Rescheduled</Tab>
-              <Tab className="text-gray-700 px-4 py-2 mr-2 rounded cursor-pointer hover:bg-gray-300">Closed</Tab>
-            </TabList>
-            <TabPanel>
-              <FilteredCard hostId={hostsId} />
-            </TabPanel>
-            <TabPanel>
-              <RescheduledVisitation hostId={hostsId} />
-            </TabPanel>
-            <TabPanel>
-              <PatchRequestAtTime/>
-            </TabPanel>
-          </Tabs>
-          <ToastContainer />
+            <ProfileHeader username={userProfile} newRequests={newRequests} />
+            <Tabs>
+                <TabList className="flex justify-center bg-gray-100 p-4 rounded-t-xl mb-4">
+                    <Tab className="text-gray-700 px-4 py-2 mr-2 rounded cursor-pointer hover:bg-gray-300">New</Tab>
+                    <Tab className="text-gray-700 px-4 py-2 mr-2 rounded cursor-pointer hover:bg-gray-300">Rescheduled</Tab>
+                    <Tab className="text-gray-700 px-4 py-2 mr-2 rounded cursor-pointer hover:bg-gray-300">Closed</Tab>
+                </TabList>
+                <TabPanel>
+                    <FilteredCard hostId={hostsId} />
+                </TabPanel>
+                <TabPanel>
+                    <RescheduledVisitation hostId={hostsId} />
+                </TabPanel>
+                <TabPanel>
+                    <ClosedVisitation hostId={hostsId}/>
+                </TabPanel>
+            </Tabs>
+            <ToastContainer />
         </div>
-      );
+    );
 };
 
 const FilteredCard = ({ hostId }) => {
@@ -42,25 +63,25 @@ const FilteredCard = ({ hostId }) => {
     const [showReferModal, setShowReferModal] = useState(false);
     const [selectedRequest, setSelectedRequest] = useState(null);
     const [showRescheduledVisits, setShowRescheduledVisits] = useState(false);
-  
+
     useEffect(() => {
-      const fetchData = async () => {
-        try {
-          const visitationResponse = await axios.get("http://ezapi.issl.ng:3333/visitationrequest");
-          setVisitationRequests(visitationResponse.data);
-        } catch (error) {
-          console.error("Error fetching data:", error);
-        }
-      };
-  
-      fetchData();
+        const fetchData = async () => {
+            try {
+                const visitationResponse = await axios.get("http://ezapi.issl.ng:3333/visitationrequest");
+                setVisitationRequests(visitationResponse.data);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        };
+
+        fetchData();
     }, []);
-  
+
     const filteredRequests = visitationRequests.filter((request) =>
-      request.staffid === hostId &&
-      request.status !== "Approved" &&
-      request.status !== "Declined" &&
-      request.status !== "Rescheduled"
+        request.staffid === hostId &&
+        request.status !== "Approved" &&
+        request.status !== "Declined" &&
+        request.status !== "Rescheduled"
     );
   
     return (
@@ -381,5 +402,48 @@ const Card = ({ request, setShowModal, setSelectedRequest, setShowReferModal, se
       </div>
     );
   };
+
+
+  const ClosedVisitation = ({hostId}) => {
+    const [closedVisits, setClosedVisits] = useState([]);
+
+    useEffect(() => {
+      const fetchedClosedVisits = async () => {
+        try {
+          const res = await axios.get("http://ezapi.issl.ng:3333/visitationrequest");
+          const filteredRes = res.data.filter((visit) => visit.status === "Approved" || "Declined" && visit.staffid === hostId);
+          setClosedVisits(filteredRes);
+          
+        } catch (error) {
+          console.error("Error fetching closed visits:", error);
+        }
+      };
+
+      fetchedClosedVisits();
+    }, [hostId]);
+
+    return (
+      <div className="flex justify-center">
+      <div className="mt-8">
+        <h2 className="text-xl font-bold mb-4">Closed Visits</h2>
+        {closedVisits.length === 0 ? (
+          <div className="text-gray-600">No closed visits found</div>
+        ) : (
+          <div>
+            {closedVisits.map((visit) => (
+              <div key={visit.id} className="border border-gray-300 rounded-md p-4 mb-2">
+                <div className="font-semibold">{visit.visitorname}</div>
+                <div>{visit.plannedvisitdate}</div>
+                <div>{visit.hostofficeextensiom}</div>
+                <div>{visit.status}</div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+    );
+
+  }
 
 export default TabHostRequests;

@@ -31,7 +31,6 @@ const UserLogViewer = ({ requestId }) => {
     <p>{error}</p>
   ) : (
     <div>
-      <h2>User Log for ID: {requestId}</h2>
       <ul>
         {userLog.map((logEntry) => (
           <li key={logEntry.id}>

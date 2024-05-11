@@ -7,7 +7,7 @@ const RequestsWithUserId = ({userProfile}) => {
     let { userId } = useParams();
     
     // return <HostRequests hostsId={userId} />;
-    return <TabHostRequests hostsId={userId} userProfile={userProfile} />;
+    return <TabHostRequests hostsId={userId} userProfile={userProfile} newRequests={"33"} />;
 
   }
 
