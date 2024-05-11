@@ -8,7 +8,6 @@ import DatePickerExample from '../components/common/DatePickers';
 import TimePicker from '../components/common/TimePicker';
 import { FaClock } from "react-icons/fa";
 import { BsFillPersonLinesFill } from "react-icons/bs";
-import PatchRequestAtTime from '../components/common/PatchTime';
 import ProfileHeader from '../components/header/ProfileHeader';
 
 const TabHostRequests = ({ hostsId, userProfile }) => {
@@ -141,49 +140,50 @@ const Card = ({ request, setShowModal, setSelectedRequest, setShowReferModal, se
     };
 
     return (
-        <div className="max-w-sm mx-auto bg-white rounded-xl shadow-md overflow-hidden mb-4">
-            <div className="p-12">
-                <div className="text-xl font-medium text-gray-800 mb-4">Visitation Request</div>
-                <div className="justify-between items-center mb-2">
-                    <div className='mb-4'>
-                        <div className="font-semibold text-gray-600">Approval Required</div>
-                        <div className="text-gray-700">You have a visitor that needs your approval to get in</div>
-                    </div>
-                    <div>
-                        <div className="font-semibold text-gray-600">Full Name</div>
-                        <div className="text-gray-700">{request.visitorname}</div>
-                    </div>
-                    <div>
-                        <div className="font-semibold text-gray-600">Visitor Type</div>
-                        <div className="text-gray-700">Visitor</div>
-                    </div>
-                </div>
-                <div className="justify-between items-center mb-4">
-                    <div>
-                        <div className="font-semibold text-gray-600">Purpose for Visit</div>
-                        <div className="text-gray-700">Official</div>
-                    </div>
-                    <div>
-                        <div className="font-semibold text-gray-600">Private Note</div>
-                        <div className="text-gray-700">{request.hostemailaddress}</div>
-                    </div>
-                </div>
-                <div className="flex">
-                    <button className="border border-black hover:bg-black hover:text-white text-black font-semibold px-4 py-2 mr-2 rounded w-full" onClick={handleRefer}>
-                        <BsFillPersonLinesFill />
-                    </button>
-                    <button className='flex items-center justify-center px-4 py-2 border hover:text-white border-yellow-500 bg-white-400 text-yellow-500 hover:bg-yellow-500 rounded-md mr-2 w-full' onClick={handleReschedule}>
-                        <FaClock />
-                    </button>
-                    <button className="border border-red-500 hover:bg-red-500 hover:text-white text-red-500 font-semibold px-4 py-2 mr-2 rounded w-fit" onClick={handleDecline}>
-                        Decline
-                    </button>
-                    <button className="bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 mr-2 rounded w-fit" onClick={handleApprove}>
-                        Approve
-                    </button>
-                </div>
+<div className="max-w-sm mx-auto bg-white rounded-xl border border-grey-600 mb-4">
+    <div className="p-12">
+        <div className="text-xl font-medium text-gray-800 mb-4">Visitation Request</div>
+        <div className="justify-between items-center mb-2">
+            <div className='mb-4'>
+                <div className="font-semibold text-gray-600">Approval Required</div>
+                <div className="text-gray-700">You have a visitor that needs your approval to get in</div>
+            </div>
+            <div>
+                <div className="font-semibold text-gray-600">Full Name</div>
+                <div className="text-gray-700">{request.visitorname}</div>
+            </div>
+            <div>
+                <div className="font-semibold text-gray-600">Visitor Type</div>
+                <div className="text-gray-700">Visitor</div>
             </div>
         </div>
+        <div className="justify-between items-center mb-4">
+            <div>
+                <div className="font-semibold text-gray-600">Purpose for Visit</div>
+                <div className="text-gray-700">Official</div>
+            </div>
+            <div>
+                <div className="font-semibold text-gray-600">Private Note</div>
+                <div className="text-gray-700">{request.hostemailaddress}</div>
+            </div>
+        </div>
+        <div className="flex">
+            <button className="border border-black hover:bg-black hover:text-white text-black font-semibold px-4 py-2 mr-2 rounded w-full" onClick={handleRefer}>
+                <BsFillPersonLinesFill />
+            </button>
+            <button className='flex items-center justify-center px-4 py-2 border hover:text-white border-yellow-500 bg-white-400 text-yellow-500 hover:bg-yellow-500 rounded-md mr-2 w-full' onClick={handleReschedule}>
+                <FaClock />
+            </button>
+            <button className="border border-red-500 hover:bg-red-500 hover:text-white text-red-500 font-semibold px-4 py-2 mr-2 rounded w-fit" onClick={handleDecline}>
+                Decline
+            </button>
+            <button className="bg-green-500 hover:bg-green-600 text-white font-semibold px-4 py-2 mr-2 rounded w-fit" onClick={handleApprove}>
+                Approve
+            </button>
+        </div>
+    </div>
+</div>
+
     );
 };
 

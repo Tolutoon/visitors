@@ -15,7 +15,7 @@ const keycloak = new Keycloak({
 });
 
 function App() {
-  const [isAdmin, setIsAdmin] = useState(false);
+  // const [isAdmin, setIsAdmin] = useState(false);
   const [authenticated, setAuthenticated] = useState(false);
   const [userProfile, setUserProfile] = useState(null); // State to store user profile
 
@@ -25,15 +25,15 @@ function App() {
         console.log('User is authenticated');
         setAuthenticated(true);
 
-        const realmRoles = keycloak.realmAccess.roles;
-        console.log(realmRoles);
-        if (realmRoles && realmRoles.includes('admin')) {
-          setIsAdmin(true);
-        }
+        // const realmRoles = keycloak.realmAccess.roles;
+        // console.log(realmRoles);
+        // if (realmRoles && realmRoles.includes('admin')) {
+        //   setIsAdmin(true);
+        // }
 
         // Load user profile after authentication
         keycloak.loadUserProfile().then((profile) => {
-          console.log('User Profile:', profile);
+          // console.log('User Profile:', profile);
           setUserProfile(profile);
         }).catch((error) => {
           console.error('Error loading user profile:', error);

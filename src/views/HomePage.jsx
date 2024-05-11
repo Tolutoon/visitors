@@ -54,9 +54,9 @@ const Homepage = () => {
       style={{backgroundImage: `url(${backgroundImage})`}} // Adding background image
     >
       <div className="absolute top-4 right-4">
-        <button onClick={handleLogin} className="bg-black text-white px-4 py-2 rounded-md hover:bg-opacity-80">
+        {/* <button onClick={handleLogin} className="bg-black text-white px-4 py-2 rounded-md hover:bg-opacity-80">
           Login
-        </button>
+        </button> */}
       </div>
       <div className="text-black text-5xl font-bold mb-8">
         <Typewriter

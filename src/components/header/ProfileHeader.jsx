@@ -15,7 +15,7 @@ const ProfileHeader = ({ username, newRequests }) => {
   return (
     <div className="text-center pb-8">
       <div className="flex items-center justify-center mb-4">
-        <h1 className="text-2xl font-bold mr-2">Welcome {capitalizedUsername}</h1>
+        <h1 className="text-2xl font-bold mr-4">Welcome {capitalizedUsername}</h1>
         {/* Render the bell icon if there are new requests */}
         {newRequests.length > 0 && (
           <div className="relative">
