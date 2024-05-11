@@ -4,12 +4,12 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import 'react-tabs/style/react-tabs.css';
-import DatePickerExample from '../DatePickers';
-import TimePicker from '../TimePicker';
+import DatePickerExample from '../components/common/DatePickers';
+import TimePicker from '../components/common/TimePicker';
 import { FaClock } from "react-icons/fa";
 import { BsFillPersonLinesFill } from "react-icons/bs";
-import PatchRequestAtTime from '../PatchTime';
-import ProfileHeader from '../ProfileHeader';
+import PatchRequestAtTime from '../components/common/PatchTime';
+import ProfileHeader from '../components/header/ProfileHeader';
 
 const TabHostRequests = ({ hostsId, userProfile }) => {
     return (

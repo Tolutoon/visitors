@@ -1,13 +1,13 @@
 import { Routes, Route } from "react-router-dom";
 import RequestsWithUserId from "./components/RequestsWithUserId";
-import Visitors from './components/dashboard/Visitors';
-import FormFloatingBasicExample from "./components/Form/VisitorsForm";
+import Visitors from './views/Visitors';
+import FormFloatingBasicExample from "./components/form/VisitorsForm";
 import UserLogViewer from "./components/dashboard/Log";
 import LogRequestId from "./LogRequest";
-import Homepage from "./components/dashboard/HomePage";
+import Homepage from "./views/HomePage";
 import Keycloak from "keycloak-js";
 import { useState, useEffect } from "react";
-import SignIn from "./components/dashboard/SignIn";
+import Auth from "./utils/Auth";
 
 const keycloak = new Keycloak({
   url: 'https://keycloak.issl.ng',
@@ -59,7 +59,7 @@ function App() {
       ) : null}
       <Route path="/form" element={<FormFloatingBasicExample/>}/>
       <Route path="/home" element={<Homepage/>}/>
-      <Route path="/" element={<SignIn/>}/>
+      <Route path="/" element={<Auth/>}/>
     </Routes>
   );
 }

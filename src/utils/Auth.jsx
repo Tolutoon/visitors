@@ -8,7 +8,7 @@ const keycloak = new Keycloak({
   clientId: 'react-client'
 });
 
-const SignIn = () => {
+const Auth = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -42,4 +42,4 @@ const SignIn = () => {
   return null; // This component doesn't render anything visible
 }
 
-export default SignIn;
+export default Auth;

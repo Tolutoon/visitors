@@ -1,7 +1,7 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import HostRequests from "./dashboard/HostRequests"
-import TabHostRequests from "./dashboard/Tabbar";
+import TabHostRequests from "../views/Tabbar";
 
 const RequestsWithUserId = ({userProfile}) => {
     let { userId } = useParams();

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Typewriter from "typewriter-effect";
 import Keycloak from "keycloak-js";
 import { Link, useNavigate } from "react-router-dom";
-import backgroundImage from '../../assets/homepagebg.png'; // Importing the background image
+import backgroundImage from '../../src/assets/homepagebg.png'; // Importing the background image
 
 const keycloak = new Keycloak({
   url: 'https://keycloak.issl.ng',

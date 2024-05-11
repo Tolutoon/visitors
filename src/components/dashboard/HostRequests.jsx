@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import DatePickerExample from '../DatePickers';
-import TimePicker from '../TimePicker';
+import DatePickerExample from '../common/DatePickers';
+import TimePicker from '../common/TimePicker';
 import { FaClock } from "react-icons/fa";
 import { BsFillPersonLinesFill } from "react-icons/bs";
-import PatchRequestAtTime from '../PatchTime';
-import ProfileHeader from '../ProfileHeader';
+import PatchRequestAtTime from '../common/PatchTime';
+import ProfileHeader from '../header/ProfileHeader';
 
 const HostRequests = ({ hostsId }) => {
   return (

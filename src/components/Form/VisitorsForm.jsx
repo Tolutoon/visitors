@@ -22,7 +22,7 @@ const Modal = ({ isOpen, onClose }) => {
                 <h2 className="font-bold text-xl mb-4">Request submitted successfully</h2>
                 <p className="mb-8 text-center">Your request has been submitted. Please wait while your request is being processed.</p>
                 <Link
-                  to="/"
+                  to="/home"
                   className="block text-center bg-black text-white px-8 py-2 rounded-md hover:bg-opacity-80"
                   onClick={onClose}
                 >
