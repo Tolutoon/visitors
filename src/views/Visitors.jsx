@@ -1,14 +1,10 @@
 import React, { useState, useEffect } from "react";
-// import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import Header from '../components/header/Header';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { toast, ToastContainer } from 'react-toastify';
-// import { Link } from 'react-router-dom';
 import axios from "axios";
 import PopUpButton from "../components/common/PopUp";
-// import { Route } from 'react-router-dom';
-// import UserLogViewer from "./Log";
 
 const DatePickerExample = () => {
   const [selectedDate, setSelectedDate] = useState(null);
@@ -28,9 +24,6 @@ const DatePickerExample = () => {
     </div>
   );
 };
-
-
-
 
 const Visitors = () => {
   const [visitationRequests, setVisitationRequests] = useState([]);
@@ -59,16 +52,12 @@ const Visitors = () => {
 
   const handleCheckIn = async (id) => {
     try {
-      // Find the request with the given id
       const requestToUpdate = visitationRequests.find((request) => request.id === id);
-      
-      // Check if the user is approved
       if (requestToUpdate.status !== "Approved") {
         console.log("User is not approved yet. Check-in cannot be performed.");
         return;
       }
   
-      // Toggle the status between "Signed In" and "Signed Out"
       const newStatus = requestToUpdate.statusbystaffid === "Signed In" ? "Signed Out" : "Signed In";
       const updatedRequests = visitationRequests.map((request) => {
         if (request.id === id) {
@@ -79,32 +68,17 @@ const Visitors = () => {
   
       setVisitationRequests(updatedRequests);
   
-      if (newStatus === "Signed Out") {
-        // Delete the user if signing out
-        await axios.patch(`http://ezapi.issl.ng:3333/visitationrequest?id=eq.${id}`, {
-          statusbystaffid: 'Signed Out',
-        });
+      await axios.patch(`http://ezapi.issl.ng:3333/visitationrequest?id=eq.${id}`, {
+        statusbystaffid: newStatus,
+      });
 
-        console.log("User Signed Out.");
-        toast.success('User Signed Out');
-      } else {
-        // Update the status if signing in
-        await axios.patch(`http://ezapi.issl.ng:3333/visitationrequest?id=eq.${id}`, {
-          statusbystaffid: newStatus
-        });
-        console.log("Patch successful. Visitor status updated.");
-      }
+      console.log("Patch successful. Visitor status updated.");
+      toast.success(newStatus === "Signed Out" ? 'User Signed Out' : 'User Signed In');
     } catch (error) {
       console.error("Error updating visitation request:", error);
     }
   };
   
-  // Function to find employee name by staffid
-  const findEmployeeName = (staffid) => {
-    const employee = employees.find((emp) => emp.staffid === staffid);
-    return employee ? employee.name : "";
-  };
-
   const handleVisitorTypeChange = (event) => {
     setSelectedVisitorType(event.target.value);
   };
@@ -112,80 +86,71 @@ const Visitors = () => {
   return (
     <div className="container mx-auto px-8">
       <Header/>
-      
-      <div className="flex max-w-600px justify-end">
-        
-      {/* Dropdown filter for visitor types */}
-      <div className="py-4 border border-gray-300 rounded-md w-min px-2 mr-4">
-        {/* <label htmlFor="visitorTypeFilter" className="mr-2">Filter by Visitor Type:</label> */}
-        <select id="visitorTypeFilter" value={selectedVisitorType} onChange={handleVisitorTypeChange}>
-          <option value="">All Visitors</option>
-          <option value="Visitor">Visitor</option>
-          <option value="Employee">Employee</option>
-          {/* Add more visitor types as needed */}
-        </select>
-      </div>
-      <div className="py-4 border border-gray-300 rounded-md w-min px-2 mr-2">
-        {/* <label htmlFor="visitorTypeFilter" className="mr-2">Filter by Visitor Type:</label> */}
-        <select id="visitorTypeFilter" value={selectedVisitorType} onChange={handleVisitorTypeChange}>
-          <option value="">All</option>
-          <option value="Visitor">Visitor</option>
-          <option value="Employee">Employee</option>
-          {/* Add more visitor types as needed */}
-        </select>
-      </div>
-      <DatePickerExample/>
-      </div>
-
-      {/* End of dropdown filter */}
-
-      <div className="grid grid-cols-9 gap-2 border-b border-gray-300 py-8 ">
-        <div className="col-span-1 text-center">Visitor's name</div>
-        <div className="col-span-1 text-center">Visitor's Type</div>
-        <div className="col-span-1 text-center">Arrival Time</div>
-        <div className="col-span-1 text-center">To see</div>
-        <div className="col-span-1 text-center">Purpose</div>
-        <div className="col-span-1 text-center">Host Decision</div>
-        <div className="col-span-1 text-center">Visitor's status</div>
-      </div>
-
-      {visitationRequests.filter(request => request.statusbystaffid !== 'Signed Out').length === 0 ? (
-  <div className="text-center py-4">No visitor's log</div>
-) : (
-  <div>
-    {visitationRequests
-      .filter(request => request.statusbystaffid !== 'Signed Out') // Filter out visitors with status 'Signed Out'
-      .map(request => (
-        <div
-          className="grid grid-cols-9 gap-2 border-b border-gray-300 py-6 items-center justify-center"
-          key={request.id}
-        >
-          <div className="col-span-1 text-center font-bold">{request.visitorname}</div>
-          <div className="col-span-1 text-center">Visitor</div>
-          <div className="col-span-1 text-center">{request.plannedvisittime}</div>
-          <div className="col-span-1 text-center font-bold">{request.hostname}</div>
-          <div className="col-span-1 text-center">Official</div>
-          <div className="col-span-1 text-center" style={{ color: request.status === 'Approved' ? 'green' : request.status === 'Rescheduled' ? '#A4A40A' : 'red' }}>{request.status}</div>
-          <div className="col-span-1 text-center">{request.statusbystaffid}</div>
-          <button 
-            onClick={() => handleCheckIn(request.id)}
-            style={{
-              backgroundColor: request.status !== 'Approved' || request.statusbystaffid === 'Signed Out' ? 'grey' : request.statusbystaffid === 'Signed In' ? 'red' : 'green',
-              padding: '10px 10px',
-              color: 'white',
-              border: 'none',
-              borderRadius: '5px',
-              cursor: 'pointer'
-            }}
-          >
-            {request.statusbystaffid === 'Signed In' ? 'Check out' : 'Check in'}
-          </button>
-          <PopUpButton requestId={request.id} /> 
+      <div className="flex flex-col md:flex-row max-w-6xl mx-auto justify-between items-center py-4">
+        <div className="w-full md:w-auto flex items-center">
+          <div className="py-4 border border-gray-300 rounded-md w-min px-2 mr-4">
+            <select id="visitorTypeFilter" value={selectedVisitorType} onChange={handleVisitorTypeChange}>
+              <option value="">All Visitors</option>
+              <option value="Visitor">Visitor</option>
+              <option value="Employee">Employee</option>
+            </select>
+          </div>
+          <div className="py-4 border border-gray-300 rounded-md w-min px-2 mr-2">
+            <select id="visitorTypeFilter" value={selectedVisitorType} onChange={handleVisitorTypeChange}>
+              <option value="">All</option>
+              <option value="Visitor">Visitor</option>
+              <option value="Employee">Employee</option>
+            </select>
+          </div>
+          <DatePickerExample/>
         </div>
-      ))}
-  </div>
-)}
-
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-9 gap-2 border-b border-gray-300 py-8 ">
+        <div className="col-span-1 text-center md:col-span-1">Visitor's name</div>
+        <div className="col-span-1 text-center md:col-span-1">Visitor's Type</div>
+        <div className="col-span-1 text-center md:col-span-1">Arrival Time</div>
+        <div className="col-span-1 text-center md:col-span-1">To see</div>
+        <div className="col-span-1 text-center md:col-span-1">Purpose</div>
+        <div className="col-span-1 text-center md:col-span-1">Host Decision</div>
+        <div className="col-span-1 text-center md:col-span-1">Visitor's status</div>
+      </div>
+      {visitationRequests.filter(request => request.statusbystaffid !== 'Signed Out').length === 0 ? (
+        <div className="text-center py-4">No visitor's log</div>
+      ) : (
+        <div>
+          {visitationRequests
+            .filter(request => request.statusbystaffid !== 'Signed Out')
+            .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
+            .map(request => (
+              <div
+                className="grid grid-cols-1 md:grid-cols-9 gap-2 border-b border-gray-300 py-6 items-center justify-center"
+                key={request.id}
+              >
+                <div className="col-span-1 md:col-span-1 text-center font-bold">{request.visitorname}</div>
+                <div className="col-span-1 md:col-span-1 text-center">Visitor</div>
+                <div className="col-span-1 md:col-span-1 text-center">{request.plannedvisittime}</div>
+                <div className="col-span-1 md:col-span-1 text-center font-bold">{request.hostname}</div>
+                <div className="col-span-1 md:col-span-1 text-center">Official</div>
+                <div className="col-span-1 md:col-span-1 text-center" style={{ color: request.status === 'Approved' ? 'green' : request.status === 'Rescheduled' ? '#A4A40A' : 'red' }}>{request.status}</div>
+                <div className="col-span-1 md:col-span-1 text-center">{request.statusbystaffid}</div>
+                <button 
+                  onClick={() => handleCheckIn(request.id)}
+                  style={{
+                    backgroundColor: request.status !== 'Approved' || request.statusbystaffid === 'Signed Out' ? 'grey' : request.statusbystaffid === 'Signed In' ? 'red' : 'green',
+                    padding: '10px 10px',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '5px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  {request.statusbystaffid === 'Signed In' ? 'Check out' : 'Check in'}
+                </button>
+                <PopUpButton requestId={request.id} /> 
+              </div>
+            ))}
+        </div>
+      )}
       <ToastContainer />
     </div>
   );

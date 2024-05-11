@@ -1,6 +1,6 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import HostRequests from "./dashboard/HostRequests"
+import HostRequests from "../components/cards/Host"
 import TabHostRequests from "../views/Tabbar";
 
 const RequestsWithUserId = ({userProfile}) => {

@@ -166,110 +166,126 @@ const Header = () => {
               {/* Modal Body */}
               <div>
                 <form onSubmit={handleSubmit}>
-                  <div className="mb-4">
-                    <input
-                      className="border border-gray-300 rounded-md py-2 px-4 w-full"
-                      type="text"
-                      id="visitorname"
-                      name="visitorname"
-                      placeholder="Visitor's Full Name"
-                      value={formData.visitorname}
-                      onChange={handleChange}
-                    />
-                    {/* Error message */}
-                  </div>
-                  <div className="mb-4">
-                    <input
-                      className="border border-gray-300 rounded-md py-2 px-4 w-full"
-                      type="tel"
-                      id="visitorphone"
-                      name="visitorphone"
-                      placeholder="Phone Number"
-                      value={formData.visitorphone}
-                      onChange={handleChange}
-                    />
-                    {/* Error message */}
-                  </div>
-                  <div className="mb-4">
-                    <input
-                      className="border border-gray-300 rounded-md py-2 px-4 w-full"
-                      type="email"
-                      id="visitoremail"
-                      name="visitoremail"
-                      placeholder="Email Address"
-                      value={formData.visitoremail}
-                      onChange={handleChange}
-                    />
-                    {/* Error message */}
-                  </div>
-                  <div className="mb-4">
-                    {/* <select
-                      className="border border-gray-300 rounded-md py-2 px-4 w-full"
-                      id="visitorType"
-                      name="visitorType"
-                      value="string"
-                      onChange={handleChange}
-                    >
-                      <option disabled value="">
-                        Visitor Type
-                      </option>
-                      <option value="family">Family</option>
-                      <option value="friend">Friend</option>
-                      <option value="vendor">Vendor</option>
-                    </select> */}
-                    {/* Error message */}
-                  </div>
-                  <div className="mb-4">
-                    <input
-                      className="border border-gray-300 rounded-md py-2 px-4 w-full"
-                      type="text"
-                      id="hostname"
-                      name="hostname"
-                      placeholder="Who to see (Name)"
-                      value={formData.hostname}
-                      onChange={handleChange}
-                    />
-                    {/* Error message */}
-                  </div>
-                  <div className="mb-4">
-                    <input
-                      className="border border-gray-300 rounded-md py-2 px-4 w-full"
-                      type="tel"
-                      id="hostphoneno"
-                      name="hostphoneno"
-                      placeholder="Who to see (Phone Number)"
-                      value={formData.hostphoneno}
-                      onChange={handleChange}
-                    />
-                    {/* Error message */}
-                  </div>
-                  <div className="mb-4">
-                    {/* <select
-                      className="border border-gray-300 rounded-md py-2 px-4 w-full"
-                      id="purpose"
-                      name="purpose"
-                      value='purpose'
-                      onChange={handleChange}
-                    >
-                      <option disabled value="">
-                        Purpose for visit
-                      </option>
-                      <option value="official">Official</option>
-                      <option value="personal">Personal</option>
-                    </select> */}
-                    {/* Error message */}
-                  </div>
-                  <div className="mb-4">
-                    <textarea
-                      className="border border-gray-300 rounded-md pb-8 pt-2 px-4 w-full"
-                      id="hostemailaddress"
-                      name="privateNote"
-                      placeholder="Private Note"
-                      value={formData.hostemailaddress}
-                      onChange={handleChange}
-                    />
-                    {/* Error message */}
-                  </div>
+                <div className="mb-4 relative">
+   <input
+    className="border border-gray-300 rounded-md py-3 px-4 w-full placeholder-gray-500"
+    type="text"
+    id="visitorname"
+    name="visitorname"
+    placeholder=" "
+    value={formData.visitorname}
+    onChange={handleChange}
+  />
+  <label
+    htmlFor="visitorname"
+    className={`absolute left-4 transition-all duration-300 text-gray-400 ${
+      formData.visitorname ? 'top-1 text-xs text-gray-600' : 'top-4 text-sm'
+    }`}
+  >
+    Visitor's Full Name
+  </label>
+</div>
+
+
+<div className="mb-4 relative">
+  <input
+    className="border border-gray-300 rounded-md py-3 px-4 w-full placeholder-gray-500"
+    type="text"
+    id="visitorphone"
+    name="visitorphone"
+    placeholder=" "
+    value={formData.visitorphone}
+    onChange={handleChange}
+  />
+  <label
+    htmlFor="visitorphone"
+    className={`absolute left-4 transition-all duration-300 text-gray-400 ${
+      formData.visitorphone ? 'top-1 text-xs text-gray-600' : 'top-4 text-sm'
+    }`}
+  >
+    Phone Number
+  </label>
+</div>
+
+<div className="mb-4 relative">
+  <input
+    className="border border-gray-300 rounded-md py-3 px-4 w-full placeholder-gray-500"
+    type="email"
+    id="visitoremail"
+    name="visitoremail"
+    placeholder=" "
+    value={formData.visitoremail}
+    onChange={handleChange}
+  />
+  <label
+    htmlFor="visitoremail"
+    className={`absolute left-4 transition-all duration-300 text-gray-400 ${
+      formData.visitoremail ? 'top-1 text-xs text-gray-600' : 'top-4 text-sm'
+    }`}
+  >
+    Email Address
+  </label>
+</div>
+
+<div className="mb-4 relative">
+  <input
+    className="border border-gray-300 rounded-md py-3 px-4 w-full placeholder-gray-500"
+    type="text"
+    id="hostname"
+    name="hostname"
+    placeholder=" "
+    value={formData.hostname}
+    onChange={handleChange}
+  />
+  <label
+    htmlFor="hostname"
+    className={`absolute left-4 transition-all duration-300 text-gray-400 ${
+      formData.hostname ? 'top-1 text-xs text-gray-600' : 'top-4 text-sm'
+    }`}
+  >
+    Who to see (Name)
+  </label>
+</div>
+
+<div className="mb-4 relative">
+  <input
+    className="border border-gray-300 rounded-md py-3 px-4 w-full placeholder-gray-500"
+    type="tel"
+    id="hostphoneno"
+    name="hostphoneno"
+    placeholder=" "
+    value={formData.hostphoneno}
+    onChange={handleChange}
+  />
+  <label
+    htmlFor="hostphoneno"
+    className={`absolute left-4 transition-all duration-300 text-gray-400 ${
+      formData.hostphoneno ? 'top-1 text-xs text-gray-600' : 'top-4 text-sm'
+    }`}
+  >
+    Who to see (Phone Number)
+  </label>
+</div>
+
+<div className="mb-4 relative">
+  <textarea
+    className="border border-gray-300 rounded-md pb-8 pt-2 px-4 w-full placeholder-gray-500"
+    id="hostemailaddress"
+    name="hostemailaddress"
+    placeholder=" "
+    value={formData.hostemailaddress}
+    onChange={handleChange}
+  />
+  <label
+    htmlFor="hostemailaddress"
+    className={`absolute left-4 transition-all duration-300 text-gray-400 ${
+      formData.hostemailaddress ? 'top-1 text-xs text-gray-600' : 'top-4 text-sm'
+    }`}
+  >
+    Private Note
+  </label>
+</div>
+
                   {error && <div className="error">{error}</div>}
                   <button
                     type="submit"

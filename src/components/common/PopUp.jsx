@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState} from 'react';
+import UserLogViewer from '../cards/Log'; // Import the UserLogViewer component
 import { HiOutlineDotsHorizontal } from 'react-icons/hi';
 
 const PopUpButton = ({ requestId }) => {
@@ -18,8 +18,8 @@ const PopUpButton = ({ requestId }) => {
       {showModal && (
         <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center">
           <div className="bg-white p-8 rounded-md shadow-lg">
-            {/* Modal content goes here */}
-            <p>Modal Content Here</p>
+            {/* Replace the placeholder content with the UserLogViewer component */}
+            <UserLogViewer requestId={requestId} />
             <button onClick={() => setShowModal(false)} className="px-4 py-1 rounded-md text-gray-700 hover:bg-gray-300 focus:outline-none">
               Close
             </button>

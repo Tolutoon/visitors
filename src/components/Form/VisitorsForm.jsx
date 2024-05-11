@@ -38,7 +38,7 @@ const Modal = ({ isOpen, onClose }) => {
 };
 
 
-const FormFloatingBasicExample = () => {
+const Form = () => {
   const [formData, setFormData] = useState({
     visitorname: "",
     visitorphone: "",
@@ -304,4 +304,4 @@ const FormFloatingBasicExample = () => {
   );
 };
 
-export default FormFloatingBasicExample;
+export default Form;

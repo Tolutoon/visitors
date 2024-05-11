@@ -1,8 +1,8 @@
 import { Routes, Route } from "react-router-dom";
-import RequestsWithUserId from "./components/RequestsWithUserId";
+import RequestsWithUserId from "./utils/RequestsWithUserId";
 import Visitors from './views/Visitors';
-import FormFloatingBasicExample from "./components/form/VisitorsForm";
-import UserLogViewer from "./components/dashboard/Log";
+import Form from "./components/form/VisitorsForm";
+import UserLogViewer from "./components/cards/Log";
 import LogRequestId from "./LogRequest";
 import Homepage from "./views/HomePage";
 import Keycloak from "keycloak-js";
@@ -57,7 +57,7 @@ function App() {
           <Route path="/log/:userId" element={<LogRequestId />}/>
         </>
       ) : null}
-      <Route path="/form" element={<FormFloatingBasicExample/>}/>
+      <Route path="/form" element={<Form/>}/>
       <Route path="/home" element={<Homepage/>}/>
       <Route path="/" element={<Auth/>}/>
     </Routes>
