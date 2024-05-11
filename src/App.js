@@ -2,7 +2,6 @@ import { Routes, Route } from "react-router-dom";
 import RequestsWithUserId from "./utils/RequestsWithUserId";
 import Visitors from './views/Visitors';
 import Form from "./components/form/VisitorsForm";
-import UserLogViewer from "./components/cards/Log";
 import LogRequestId from "./LogRequest";
 import Homepage from "./views/HomePage";
 import Keycloak from "keycloak-js";
