@@ -51,7 +51,7 @@ function App() {
           {isAdmin ? (
             <Route path='/log' element={<Visitors/>}/>
           ) : (
-            <Route path='/log' element={<Navigate to="/home" />} />
+            <Route path='/home' element={<Navigate to="/home" />} />
           )}
           {/* Pass the username from userProfile as a prop to RequestsWithUserId */}
           <Route path='/requests/:userId' element={<RequestsWithUserId userProfile={userProfile ? userProfile.username : null} />} />
