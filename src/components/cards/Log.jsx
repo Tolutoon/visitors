@@ -38,9 +38,10 @@ const UserLogViewer = ({ requestId }) => {
             <p><strong>Visitor Name:</strong> {logEntry.visitorname}</p>
             <p><strong>Visitor Phone:</strong> {logEntry.visitorphone}</p>
             <p><strong>Visitor Email:</strong> {logEntry.visitoremail}</p>
+            <p><strong>Arrival Time:</strong> {logEntry.plannedvisittime}</p>
             <p><strong>Host Name:</strong> {logEntry.hostname}</p>
-            <p><strong>Status:</strong> {logEntry.status}</p>
-            <p><strong>Status by Staff ID:</strong> {logEntry.statusbystaffid}</p>
+            <p><strong>Host Decision:</strong> {logEntry.status}</p>
+            <p><strong>Visitor's Status:</strong> {logEntry.statusbystaffid}</p>
           </li>
         ))}
       </ul>
