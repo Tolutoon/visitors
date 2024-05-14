@@ -451,15 +451,15 @@ const Card = ({ request, setShowModal, setSelectedRequest, setShowReferModal, se
         <div>{visit.plannedvisitdate}</div>
       </div>
       <div className="mb-2">
-        <label className="block text-sm font-semibold text-gray-600">Host Office Extension:</label>
+        <label className="block text-sm font-semibold text-gray-600">Rescheduled Time:</label>
         <div>{visit.hostofficeextensiom}</div>
       </div>
       <div className="mb-2">
-        <label className="block text-sm font-semibold text-gray-600">Status:</label>
+        <label className="block text-sm font-semibold text-gray-600">Host Decision:</label>
         <div>{visit.status}</div>
       </div>
       <div>
-        <label className="block text-sm font-semibold text-gray-600">Status by Staff ID:</label>
+        <label className="block text-sm font-semibold text-gray-600">Visitor's Status:</label>
         <div>{visit.statusbystaffid}</div>
       </div>
     </div>
