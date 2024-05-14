@@ -289,7 +289,7 @@ const Header = ({handleLogout}) => {
 
 <div className="mb-4 relative">
   <textarea
-    className="border border-gray-300 rounded-md pb-8 pt-2 px-4 w-full placeholder-gray-500"
+    className="border border-gray-300 rounded-md pb-8 pt-4 px-4 w-full placeholder-gray-500"
     id="hostemailaddress"
     name="hostemailaddress"
     placeholder=" "

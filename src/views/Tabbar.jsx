@@ -140,14 +140,14 @@ const Card = ({ request, setShowModal, setSelectedRequest, setShowReferModal, se
     };
 
     return (
-<div className="max-w-sm mx-auto bg-white rounded-xl border border-grey-600 mb-4">
-    <div className="p-12">
-        <div className="text-xl font-medium text-gray-800 mb-4">Visitation Request</div>
-        <div className="justify-between items-center mb-2">
-            <div className='mb-4'>
-                <div className="font-semibold text-gray-600">Approval Required</div>
-                <div className="text-gray-700">You have a visitor that needs your approval to get in</div>
-            </div>
+      <div className="max-w-sm mx-auto bg-white rounded-xl border border-grey-600 mb-4">
+         <div className="p-12">
+               <div className="text-xl font-medium text-gray-800 mb-4">Visitation Request</div>
+               <div className="justify-between items-center mb-2">
+                 <div className='mb-4'>
+                     <div className="font-semibold text-gray-600">Approval Required</div>
+                      <div className="text-gray-700">You have a visitor that needs your approval to get in</div>
+                 </div>
             <div>
                 <div className="font-semibold text-gray-600">Full Name</div>
                 <div className="text-gray-700">{request.visitorname}</div>
@@ -382,24 +382,34 @@ const Card = ({ request, setShowModal, setSelectedRequest, setShowReferModal, se
     }, [hostId]);
   
     return (
-      <div className="flex justify-center">
-        <div className="mt-8">
-          <h2 className="text-xl font-bold mb-4">Rescheduled Visits</h2>
-          {rescheduledVisits.length === 0 ? (
-            <div className="text-gray-600">No rescheduled visits found</div>
-          ) : (
-            <div>
-              {rescheduledVisits.map((visit) => (
-                <div key={visit.id} className="border border-gray-300 rounded-md p-4 mb-2">
-                  <div className="font-semibold">{visit.visitorname}</div>
-                  <div>{visit.plannedvisitdate}</div>
-                  <div>{visit.hostofficeextensiom}</div>
-                </div>
-              ))}
+<div className="flex justify-center">
+  <div className="mt-8">
+    <h2 className="text-xl font-bold mb-4">Rescheduled Visits</h2>
+    {rescheduledVisits.length === 0 ? (
+      <div className="text-gray-600">No rescheduled visits found</div>
+    ) : (
+      <div>
+        {rescheduledVisits.map((visit) => (
+          <div key={visit.id} className="border border-gray-300 rounded-md p-8 mb-4">
+            <div className="mb-2">
+              <label className="block text-sm font-semibold text-gray-600">Visitor Name:</label>
+              <div className="text-lg font-semibold">{visit.visitorname}</div>
             </div>
-          )}
-        </div>
+            <div className="mb-2">
+              <label className="block text-sm font-semibold text-gray-600">Planned Visit Date:</label>
+              <div>{visit.plannedvisitdate}</div>
+            </div>
+            <div>
+              <label className="block text-sm font-semibold text-gray-600">Planned Visit Time:</label>
+              <div>{visit.hostofficeextensiom}</div>
+            </div>
+          </div>
+        ))}
       </div>
+    )}
+  </div>
+</div>
+
     );
   };
 
@@ -429,16 +439,33 @@ const Card = ({ request, setShowModal, setSelectedRequest, setShowReferModal, se
         {closedVisits.length === 0 ? (
           <div className="text-gray-600">No closed visits found</div>
         ) : (
-          <div>
-            {closedVisits.map((visit) => (
-              <div key={visit.id} className="border border-gray-300 rounded-md p-4 mb-2">
-                <div className="font-semibold">{visit.visitorname}</div>
-                <div>{visit.plannedvisitdate}</div>
-                <div>{visit.hostofficeextensiom}</div>
-                <div>{visit.status}</div>
-              </div>
-            ))}
-          </div>
+<div>
+  {closedVisits.map((visit) => (
+    <div key={visit.id} className="border border-gray-300 rounded-md p-6 mb-4">
+      <div className="mb-2">
+        <label className="block text-sm font-semibold text-gray-600">Visitor Name:</label>
+        <div className="text-lg font-semibold">{visit.visitorname}</div>
+      </div>
+      <div className="mb-2">
+        <label className="block text-sm font-semibold text-gray-600">Planned Visit Date:</label>
+        <div>{visit.plannedvisitdate}</div>
+      </div>
+      <div className="mb-2">
+        <label className="block text-sm font-semibold text-gray-600">Host Office Extension:</label>
+        <div>{visit.hostofficeextensiom}</div>
+      </div>
+      <div className="mb-2">
+        <label className="block text-sm font-semibold text-gray-600">Status:</label>
+        <div>{visit.status}</div>
+      </div>
+      <div>
+        <label className="block text-sm font-semibold text-gray-600">Status by Staff ID:</label>
+        <div>{visit.statusbystaffid}</div>
+      </div>
+    </div>
+  ))}
+</div>
+
         )}
       </div>
     </div>
