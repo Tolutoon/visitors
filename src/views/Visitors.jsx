@@ -6,6 +6,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import axios from "axios";
 import PopUpButton from "../components/common/PopUp";
 
+
 const DatePickerExample = () => {
   const [selectedDate, setSelectedDate] = useState(null);
 
@@ -25,7 +26,7 @@ const DatePickerExample = () => {
   );
 };
 
-const Visitors = () => {
+const Visitors = ({handleLogout}) => {
   const [visitationRequests, setVisitationRequests] = useState([]);
   const [employees, setEmployees] = useState([]);
   const [selectedVisitorType, setSelectedVisitorType] = useState("");
@@ -84,8 +85,9 @@ const Visitors = () => {
   };
 
   return (
+
     <div className="container mx-auto px-8">
-      <Header/>
+      <Header handleLogout = {handleLogout}/>
       <div className="flex flex-col md:flex-row max-w-6xl mx-auto justify-between items-center py-4 md:justify-end">
   <div className="w-full md:w-auto flex items-center md:justify-end">
     <div className="py-4 border border-gray-300 rounded-md w-min px-2 md:mr-4">
@@ -154,6 +156,7 @@ const Visitors = () => {
       )}
       <ToastContainer />
     </div>
+ 
   );
 };
 

@@ -2,8 +2,13 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { FaPowerOff } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
-const Header = () => {
+
+const Header = ({handleLogout}) => {
+
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [validPhoneNumbers, setValidPhoneNumbers] = useState([]);
   const [validNames, setValidNames] = useState([]);
@@ -26,7 +31,9 @@ const Header = () => {
     statusbystaffid: ""
   });
 
+
   useEffect(() => {
+    
     // Fetching employee phone numbers
     axios.get("http://ezapi.issl.ng:3333/employeephone")
       .then((response) => setValidPhoneNumbers(response.data.map((record) => record.phoneno)))
@@ -122,6 +129,9 @@ const Header = () => {
     setIsModalOpen(false);
   };
 
+  
+
+
   return (
     <div className="py-8 pb-11 container mx-auto max-w-7xl">
       <div className="flex justify-between items-center">
@@ -138,6 +148,12 @@ const Header = () => {
           >
             New Visitor
           </button>
+               {/* Logout button */}
+<div style={{ display: 'flex', justifyContent: 'flex-end', padding: "-40px"}}>
+<Link to="/" onClick={handleLogout} style={{ padding: '10px' }}>
+    <FaPowerOff />
+  </Link>
+</div>
         </div>
       </div>
 

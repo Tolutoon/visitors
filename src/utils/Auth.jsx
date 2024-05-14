@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import Keycloak from "keycloak-js";
 import { useNavigate } from "react-router-dom";
 
